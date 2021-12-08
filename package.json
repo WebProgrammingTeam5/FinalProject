@@ -1,0 +1,21 @@
+{
+  "name": "finalProject",
+  "version": "1.0.0",
+  "description": "SNUwebprogramming team 5 final project",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "ejs": "3.1.5",
+    "express": "4.17.1",
+    "express-validator": "6.7.0",
+    "mongoose": "5.11.1"
+  },
+  "devDependencies": {
+    "nodemon": "1.18.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
