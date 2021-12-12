@@ -79,7 +79,6 @@ app.post('/action', authentication, async (req, res) => {
       const _event = events[0];
       if (_event.type === 'battle') {
         // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
-
         event = { description: '늑대와 마주쳐 싸움을 벌였다.' };
         player.incrementHP(-1);
       } else if (_event.type === 'item') {
