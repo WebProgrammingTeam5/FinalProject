@@ -1,13 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const schema = new Schema({
+const itemSchema = new Schema({
   itemId: Number,
-  user: { type: Schema.Types.ObjectId, ref: "User" }
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
-const User = mongoose.model("User", schema);
+const Item = mongoose.model('User', itemSchema);
 
-module.exports = {
-  User
-};
+module.exports = Item;

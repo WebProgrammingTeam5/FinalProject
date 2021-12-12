@@ -2,7 +2,7 @@
   "name": "finalProject",
   "version": "1.0.0",
   "description": "SNUwebprogramming team 5 final project",
-  "main": "src/index.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "nodemon src/index.js"
   },
