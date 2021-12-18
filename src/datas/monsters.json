@@ -2,7 +2,35 @@
 [
   {
     "id": 1,
-    "name": "늑대",
+    "name": "monster1",
+    "str": 3,
+    "def": 2,
+    "hp": 3
+  },
+  {
+    "id": 2,
+    "name": "monster2",
+    "str": 3,
+    "def": 2,
+    "hp": 3
+  },
+  {
+    "id": 3,
+    "name": "monster3",
+    "str": 3,
+    "def": 2,
+    "hp": 3
+  },
+  {
+    "id": 4,
+    "name": "monster4",
+    "str": 3,
+    "def": 2,
+    "hp": 3
+  },
+  {
+    "id": 5,
+    "name": "monster5",
     "str": 3,
     "def": 2,
     "hp": 3

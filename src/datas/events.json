@@ -1,1 +1,12 @@
-// 기본스펙: 이동 시 필드별로 '아무 일도 일어나지 않음', '전투', '아이템 획득'의 일이 일어남.
+[
+  {
+    "type": "battle",
+    "description": "전투",
+    "monsterId": "1"
+  },
+  {
+    "type": "item",
+    "description": "아이템을 얻었다.",
+    "itemId": 1
+  }
+]

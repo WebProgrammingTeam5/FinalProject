@@ -16,7 +16,7 @@ const playerSchema = new Schema({
   y: { type: Number, default: 0 },
 });
 
-schema.methods.incrementHP = function (val) {
+playerSchema.methods.incrementHP = function (val) {
   const hp = this.HP + val;
   this.HP = Math.min(Math.max(0, hp), this.maxHP);
 };

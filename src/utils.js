@@ -1,6 +1,4 @@
-const axios = require('axios');
 const crypto = require('crypto');
-//const jwt = require('jsonwebtoken'); webtoken 사용 안 할 거면 없어도 괜찮을 것 같아요
 const { Player } = require('./models');
 
 // 입력받은 string을 암호화해서 return
