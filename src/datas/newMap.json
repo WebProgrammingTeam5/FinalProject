@@ -18,6 +18,54 @@
     ]
   },
   {
+    "x": 0,
+    "y": 2,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 0,
+    "y": 3,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 0,
+    "y": 4,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 0,
+    "y": 5,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 0,
+    "y": 6,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 0,
+    "y": 7,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 0,
+    "y": 8,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 0,
+    "y": 9,
+    "description": "aaa",
+    "events": []
+  },
+  {
     "x": 1,
     "y": 0,
     "description": "aaa",
@@ -30,18 +78,114 @@
     "x": 1,
     "y": 1,
     "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
+    "events": []
   },
   {
-    "x": 0,
+    "x": 1,
+    "y": 2,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 1,
+    "y": 3,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 1,
+    "y": 4,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 1,
+    "y": 5,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 1,
+    "y": 6,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 1,
+    "y": 7,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 1,
+    "y": 8,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 1,
+    "y": 9,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 2,
     "y": 0,
     "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
+    "events": []
+  },
+  {
+    "x": 2,
+    "y": 1,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 2,
+    "y": 2,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 2,
+    "y": 3,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 2,
+    "y": 4,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 2,
+    "y": 5,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 2,
+    "y": 6,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 2,
+    "y": 7,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 2,
+    "y": 8,
+    "description": "aaa",
+    "events": []
+  },
+  {
+    "x": 2,
+    "y": 9,
+    "description": "aaa",
+    "events": []
   }
 ]

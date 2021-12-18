@@ -11,25 +11,55 @@ class ConstantManager extends Manager {
   }
 }
 
-class MapManager extends Manager {
+const getDirection = (x, y) => {
+  let res = [];
+  if (y !== 9) res.push(0);
+  if (x !== 2) res.push(1);
+  if (y !== 0) res.push(2);
+  if (x !== 0) res.push(3);
+  return res;
+};
+
+// Deprecated
+// class MapManager extends Manager {
+//   constructor(datas) {
+//     super();
+//     this.id = datas.id;
+//     this.fields = {};
+
+//     datas.fields.forEach((field) => {
+//       this.fields[`${field[0]}_${field[1]}`] = {
+//         x: field[0],
+//         y: field[1],
+//         description: field[2],
+//         canGo: field[3],
+//         events: field[4],
+//       };
+//     });
+//   }
+
+//   getField(x, y) {
+//     return this.fields[`${x}_${y}`];
+//   }
+// }
+
+class newMapManager extends Manager {
   constructor(datas) {
     super();
-    this.id = datas.id;
-    this.fields = {};
+    this.fields = [];
 
-    datas.fields.forEach((field) => {
-      this.fields[`${field[0]}_${field[1]}`] = {
-        x: field[0],
-        y: field[1],
-        description: field[2],
-        canGo: field[3],
+    datas.forEach((field) => {
+      this.fields[`${field.x},${field.y}`] = {
+        x: field.x,
+        y: field.y,
+        description: field.description,
+        canGo: getDirection(field.x, field.y),
         events: field[4],
       };
     });
   }
-
   getField(x, y) {
-    return this.fields[`${x}_${y}`];
+    return this.fields[`${x},${y}`];
   }
 }
 
@@ -58,8 +88,8 @@ const constantManager = new ConstantManager(
   JSON.parse(fs.readFileSync(__dirname + '/constants.json'))
 );
 
-const mapManager = new MapManager(
-  JSON.parse(fs.readFileSync(__dirname + '/map.json'))
+const mapManager = new newMapManager(
+  JSON.parse(fs.readFileSync(__dirname + '/newMap.json'))
 );
 
 // const eventManager = new EventManager(

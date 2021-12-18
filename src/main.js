@@ -52,19 +52,20 @@ app.post('/action', authorization, async (req, res) => {
   let event = null;
   let field = null;
   let actions = [];
+
   if (action === 'query') {
-    field = mapManager.getField(player.x, player.y);
+    field = mapManager.getField(0, 0);
   } else if (action === 'move') {
     const direction = parseInt(req.body.direction, 0); // 0 북. 1 동 . 2 남. 3 서.
     let x = player.x;
     let y = player.y;
     // 플레이어 이동
     if (direction === 0) {
-      y -= 1;
+      y += 1;
     } else if (direction === 1) {
       x += 1;
     } else if (direction === 2) {
-      y += 1;
+      y -= 1;
     } else if (direction === 3) {
       x -= 1;
     } else {
@@ -72,6 +73,9 @@ app.post('/action', authorization, async (req, res) => {
     }
     field = mapManager.getField(x, y); // (x,y) 칸의 맵 데이터를 가져옴
     if (!field) res.sendStatus(400);
+
+    player.x = x;
+    player.y = y;
 
     // 각 칸의 이벤트를 실행시키는 부분(미완성)
     // const events = field.events;
@@ -95,8 +99,8 @@ app.post('/action', authorization, async (req, res) => {
   field.canGo.forEach((direction, i) => {
     actions.push({
       url: '/action',
-      text: direction,
-      params: { direction: i, action: 'move' },
+      text: ['북', '동', '남', '서'][direction],
+      params: { direction, action: 'move' },
     });
   });
   return res.send({ player, field, event, actions });
