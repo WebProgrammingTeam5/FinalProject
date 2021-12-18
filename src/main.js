@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const { constantManager, mapManager } = require('./datas/Manager');
 const { Player, Item } = require('./models');
-const { authentication, encryptPassword } = require('./utils');
+const { authentication, encryptPassword } = require('./util');
 
 const app = express();
 const port = 3000;
