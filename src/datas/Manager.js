@@ -76,7 +76,44 @@ class newMapManager extends Manager {
 //         });
 //   }
 //   getEvent(type, id) {
-//     return this.event[`${type}, ${id}`];
+//     return this.events[`${type}, ${id}`];
+//   }
+// };
+
+// class MonsterManager extends Manager {
+//   constructor(monsters) {
+//     super();
+//     this.monsters = [];
+
+//     monsters.forEach((monster) =>
+//         this.monsters[`${monster.id}`] = {
+//           id: monster.id,
+//           name: monster.name,
+//           str: monster.str,
+//           def: monster.def,
+//           hp: monster.hp,
+//         });
+//   }
+//   getMonster( id) {
+//     return this.monsters[`${id}`];
+//   }
+// };
+
+// class ItemManager extends Manager {
+//   constructor(items) {
+//     super();
+//     this.items = [];
+
+//     items.forEach((item) =>
+//         this.items[`${item.id}`] = {
+//           id: item.id,
+//           name: item.name,
+//           str: item.str,
+//           def: item.def,
+//         });
+//   }
+//   getItem( id ) {
+//     return this.items[`${id}`];
 //   }
 // };
 
@@ -92,7 +129,18 @@ const mapManager = new newMapManager(
 //   JSON.parse(fs.readFileSync(__dirname + '/events.json'))
 // );
 
+// const monsterManager = new MonsterManager(
+//     JSON.parse(fs.readFileSync(__dirname + '/monsters.json'))
+// );
+
+// const itemManager = new ItemManager(
+//     JSON.parse(fs.readFileSync(__dirname + '/items.json'))
+// );
+
 module.exports = {
   constantManager,
   mapManager,
+//   eventManager,
+//   monsterManager,
+//   itemManager,
 };
