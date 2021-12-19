@@ -22,15 +22,17 @@ app.get('/game', (req, res) => {
   res.render('game');
 });
 
-// 신규 유저 등록
+// 신규 유저 등록(email, password)
 app.post('/signup', async (req, res) => {
-  const { name } = req.body;
+  const { name, email, password } = req.body;
+  const encryptedPassword = encryptPassword(password);
   if (await Player.exists({ name })) {
     return res.status(400).send({ error: 'Player already exists' });
   }
-  const key = encryptPassword(crypto.randomBytes(20));
   const player = new Player({
     name,
+    email,
+    password: encryptedPassword,
     maxHP: 10,
     HP: 10,
     level: 1, // 레벨 시스템 추가
@@ -39,10 +41,26 @@ app.post('/signup', async (req, res) => {
     def: 5,
     x: 0,
     y: 0,
-    key,
   });
   await player.save();
-  return res.send({ key });
+  return res.send({ _id: player._id });
+});
+
+// 로그인
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const encryptedPassword = encryptPassword(password);
+
+  try {
+    const player = await Player.findOne({email, password: encryptedPassword});
+    if (player !== null) {
+      player.key = encryptPassword(crypto.randomBytes(20));
+      await player.save();
+      res.send({key : player.key});
+    }
+  } catch(err) {
+    return res.sendStatus(404);
+  }
 });
 
 // 게임 진행
