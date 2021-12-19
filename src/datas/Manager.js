@@ -67,20 +67,16 @@ class newMapManager extends Manager {
 //   constructor(events) {
 //     super();
 //     this.events = [];
-
+// 
 //     events.forEach((event) =>
-//       this.events.conc[`${field[0]}_${field[1]}`] = {
-//         x: field[0],
-//         y: field[1],
-//         type: field[2],
-//         monsterId: field[3],
-
-//       };
-//     });
+//         this.events[`${event.type}, ${event.id}`] = {
+//           type: event.type,
+//           description: event.description,
+//           id: event.id,
+//         });
 //   }
-
-//   getEvent(type, monster) {
-//     return this.event[`${type}`];
+//   getEvent(type, id) {
+//     return this.event[`${type}, ${id}`];
 //   }
 // };
 
