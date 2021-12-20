@@ -22,6 +22,9 @@
       <button value="2">남</button>
       <button value="0">북</button>
     </div>
+    <div>
+      <button onclick="{localStorage.removeItem('_key'); location.href='/';}">로그아웃</button>
+    </div>
 
     <script>
       const sendAction = (url, params = {}) => {
@@ -50,6 +53,8 @@
 
             $('#control').append(dom);
           });
+
+          
 
           if (event) {
             $('#event_result').text(event.description);

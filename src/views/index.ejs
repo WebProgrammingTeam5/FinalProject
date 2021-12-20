@@ -8,10 +8,18 @@
     <%= gameName %>에 온 걸 환영합니다. 당신의 이름은?
     <div class=""></div>
 
-    <form id="form" action="/signup">
+    <form id="form1" action="/signup">
         이름: <input name="name"/>
+        email: <input name="email"/>
+        password: <input name="password" type="password"/>
         <input type="submit" value="확인"/>
     </form>
+
+    <form id="form" action="/login">
+      email: <input name="email"/>
+      password: <input name="password" type="password"/>
+      <input type="submit" value="확인"/>
+  </form>
 
     <script>
 
@@ -19,6 +27,20 @@
     if (key) {
       location.href = '/game';
     }
+    $('#form1').submit(function(e) {
+       e.preventDefault();
+       const action = $(this).attr('action');
+       $.post(action, $(this).serialize(),(res) => {
+         if(res.err){
+           alert('이미 존재하는 이름입니다.')
+         }else{
+          localStorage.setItem('_key', res.key);
+          alert('회원가입 완료')
+         }
+          // location.href = '/index';
+         }
+       );
+     });
      $('#form').submit(function(e) {
        e.preventDefault();
        const action = $(this).attr('action');
@@ -26,6 +48,8 @@
          if(res.key) {
           localStorage.setItem('_key', res.key);
           location.href = '/game';
+         } else if(res.err){
+           alert("일치하는 플레이어가 없습니다. ")
          }
          else {
           alert("에러가 발생했습니다. 다시 시도해주세요.");
