@@ -13,8 +13,8 @@ class ConstantManager extends Manager {
 
 const getDirection = (x, y) => {
   let res = [];
-  if (y !== 10) res.push(0);
-  if (x !== 10) res.push(1);
+  if (y !== 9) res.push(0);
+  if (x !== 9) res.push(1);
   if (y !== 0) res.push(2);
   if (x !== 0) res.push(3);
   return res;

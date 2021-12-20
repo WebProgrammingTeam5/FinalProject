@@ -92,15 +92,6 @@
     ]
   },
   {
-    "x": 0,
-    "y": 10,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
     "x": 1,
     "y": 0,
     "description": "aaa",
@@ -184,15 +175,6 @@
   {
     "x": 1,
     "y": 9,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 1,
-    "y": 10,
     "description": "aaa",
     "events": [
       { "type": "battle", "monster": 1, "percent": 70 },
@@ -290,15 +272,6 @@
     ]
   },
   {
-    "x": 2,
-    "y": 10,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
     "x": 3,
     "y": 0,
     "description": "aaa",
@@ -382,15 +355,6 @@
   {
     "x": 3,
     "y": 9,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 3,
-    "y": 10,
     "description": "aaa",
     "events": [
       { "type": "battle", "monster": 1, "percent": 70 },
@@ -488,15 +452,6 @@
     ]
   },
   {
-    "x": 4,
-    "y": 10,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
     "x": 5,
     "y": 0,
     "description": "aaa",
@@ -580,15 +535,6 @@
   {
     "x": 5,
     "y": 9,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 5,
-    "y": 10,
     "description": "aaa",
     "events": [
       { "type": "battle", "monster": 1, "percent": 70 },
@@ -686,15 +632,6 @@
     ]
   },
   {
-    "x": 6,
-    "y": 10,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
     "x": 7,
     "y": 0,
     "description": "aaa",
@@ -778,15 +715,6 @@
   {
     "x": 7,
     "y": 9,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 7,
-    "y": 10,
     "description": "aaa",
     "events": [
       { "type": "battle", "monster": 1, "percent": 70 },
@@ -884,15 +812,6 @@
     ]
   },
   {
-    "x": 8,
-    "y": 10,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
     "x": 9,
     "y": 0,
     "description": "aaa",
@@ -977,114 +896,6 @@
     "x": 9,
     "y": 9,
     "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 9,
-    "y": 10,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 10,
-    "y": 0,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 10,
-    "y": 1,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 10,
-    "y": 2,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 10,
-    "y": 3,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 10,
-    "y": 4,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 10,
-    "y": 5,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 10,
-    "y": 6,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 10,
-    "y": 7,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 10,
-    "y": 8,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 10,
-    "y": 9,
-    "description": "aaa",
-    "events": [
-      { "type": "battle", "monster": 1, "percent": 70 },
-      { "type": "item", "item": 1, "percent": 30 }
-    ]
-  },
-  {
-    "x": 10,
-    "y": 10,
-    "description": "몹시 귀찮은 일이 생긴 것 같다.",
     "events": [
       { "type": "nothing", "nothing": 1, "percent": 0 },
       { "type": "battle", "monster": 1, "percent": 100 },
