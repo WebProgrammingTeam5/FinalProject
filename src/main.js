@@ -39,15 +39,7 @@ app.post('/signup', async (req, res) => {
     name,
     email,
     password: encryptedPassword,
-    maxHP: 10,
-    HP: 10,
     item: [{ name: '기본 아이템' }],
-    level: 1, // 레벨 시스템 추가
-    exp: 0,
-    str: 5,
-    def: 5,
-    x: 0,
-    y: 0,
   });
   await player.save();
   return res.send({ _id: player._id });
@@ -100,7 +92,8 @@ app.post('/action', authorization, async (req, res) => {
       x -= 1;
     } else if (direction === -1) {
       field = mapManager.getField(x,y);
-      event = { description: '무사히 도망쳤다!' };
+      const description = req.body.description;
+      event = { description};
       player.battleCount = 1;
       await player.save();
       let actions = [];
@@ -126,29 +119,37 @@ app.post('/action', authorization, async (req, res) => {
     console.log(events);
     const actions = [];
     if (events && events.length > 0) {
-      const random = Math.random() * 100;
-      let _event;
-      if (random < events[0].percent) {
-        _event = events[0];
-      } else {
-        _event = events[1];
-      }
+      let _event = null;
+      const random = parseInt(Math.random() * 100);
+      
+      // random 숫자가 꽂힐 과녁 만들기
+      let tempPercent = [];
+      events.forEach( (e,index) => {
+        for (let i = 0; i < e.percent; i++) {
+          tempPercent.push(index);
+        }
+      });
+
+      // events가 2개 이상이어도 가능
+      const eventIndex = tempPercent[random];
+      _event = events[eventIndex];
+      console.log('d'+random);
+      console.log(tempPercent);
+
       if (_event.type === 'battle') {
         console.log('battle');
         // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
         const monster = monsterManager.getMonster(_event.monster);
         event = { description: `${monster.name}을(를) 마주쳤다!` };
-        //   const changedHp = Math.max(0, parseInt(monster.str - player.str/10)) + Math.max(0, parseInt(monster.def - player.def/10));
-        //   player.incrementHP(-changedHp);
         actions.push({
           url: '/action',
           text: ['다음'],
-          params: { choice:'next', action: 'battle' },
+          params: { choice:'next', action: 'battle', monster },
         }
         );
         await player.save();
         return res.send({ player, field, event, actions });
-        // 턴제 전투 시스템 - battle용 버튼 렌더링 (미완성)
+
       } else if (_event.type === 'item') {
         console.log('item');
         const description = eventManager.getEvent(
@@ -167,42 +168,111 @@ app.post('/action', authorization, async (req, res) => {
   }
   else if(action === 'battle'){
     console.log('battle mode');
-    const choice = req.body.choice;
-    console.log(choice);
-    console.log(player);
     let x = player.x;
     let y = player.y;
     field = mapManager.getField(x,y);
+
+    const { choice, monster } = req.body;
+    console.log(choice);
     
-    event = {description: '턴제 전투 중 무엇을 할까'}
-    actions.push({
-      url: '/action',
-      text: ['공격'],
-      params: { choice:'att', action: 'battle' },
-    },{
-      url: '/action',
-      text: ['방어'],
-      params: { choice:'def', action: 'battle' },
-    },{
-      url: '/action',
-      text: ['아이템'],
-      params: { choice:'item', action: 'battle' },
-    }
-    );
-    console.log(player.battleCount);
-    if (player.battleCount >= 1){
+    if(choice === 'next'){
+      
+      event = {monster: `${monster.name}\n${monster.hp}/${monster.maxHp}\n`, description: `${player.name}은(는) 무엇을 할까?`};
+      // 턴제 전투 버튼 렌더링
       actions.push({
         url: '/action',
-        text: ['도망'],
-        params: { direction: -1, action: 'move' },
-      })
+        text: ['공격'],
+        params: { choice:'attack', action: 'battle', monster },
+      },{
+        url: '/action',
+        text: ['방어'],
+        params: { choice:'defense', action: 'battle', monster },
+      }
+      );
+        // 도망 카운트
+      console.log('battleCount: ' + player.battleCount);
+
+      // 도망 카운트가 1(테스트용) 이상이면 도망 버튼 생김
+      if (player.battleCount >= 1){
+        actions.push({
+          url: '/action',
+          text: ['도망'],
+          params: { direction: -1, action: 'move', description: '무사히 도망쳤다!' },
+        })
+      }
+      player.battleCount++;
+      await player.save();
+      return res.send({ player, field, event, actions });
     }
-    player.x = x; player.y = y;
-    player.battleCount++;
+
+    let monsterDef = monster.def;
+    let playerDef = player.def;
+    // 0은 공격, 1은 방어;
+    let monsterChoice;
+    let playerChoice;
+
+    const calDamage = (str, def) => {
+      const plusOrMinus = [1,-1];
+      if (str*2 <= def){
+        return parseInt(Math.random()*2)+1;
+      }
+      // 공격에 가중치를 둠
+      const normalDamage = parseInt((str*2 - def) / 2);
+      const randomDamage = parseInt(Math.random()*normalDamage/4 + 1) * plusOrMinus[Math.round(Math.random())]
+      console.log(randomDamage);
+      const totalDamage = normalDamage + randomDamage;
+      return totalDamage;
+    }
+
+    // 이하 턴제 전투 시스템
+    // 공격: 기본 계산된 대미지 +- 작은 랜덤 대미지
+    // 방어: 방어 시 def 2배
+    if (choice === 'defense'){
+      playerChoice = 1;
+      playerDef = player.def*2
+    }
+    // 몬스터 행동 선택
+    const monsterRandom = Math.random() * monster.maxHp;
+    if (monster.hp < monsterRandom){
+      // 몬스터 방어
+      // hp가 적을수록 몬스터의 방어 확률 증가
+      monsterChoice = 1;
+      monsterDef = monsterDef*2;
+    } else {
+      // 몬스터 공격
+      monsterChoice = 0;
+      const damage = calDamage(monster.str, playerDef);
+      console.log('dd'+damage);
+      player.incrementHP(-damage);
+    }
+    if (choice === 'attack'){
+      playerChoice = 0;
+      const damage = calDamage(player.str, monsterDef);
+      monster.hp = Math.max(0, monster.hp - damage);
+      if (monster.hp === 0){
+        event = {description:`${monster.name}을(를) 무찔렀다!`}
+        actions.push({
+          url: '/action',
+          text: ['다음'],
+          params: { direction:-1, action: 'move', description: '이젠 어디로 갈까?'},
+        }
+        );
+        return res.send({ player, field, event, actions });
+      }
+    } 
+    const resultDialog = [
+      [`서로 공격했다!`, `${monster.name}은(는) 방어 태세를 취한 ${player.name}을(를) 공격했다!`],
+      [`${monster.name}은(는) 방어 태세를 취했다!`, `서로 방어 태세를 취했다! 아무 일도 일어나지 않았다...`],
+    ]
+    event = {monster: `${monster.name}\n${monster.hp}/${monster.maxHp}\n`, description: resultDialog[monsterChoice][playerChoice]};
+    actions.push({
+      url: '/action',
+      text: ['다음'],
+      params: { choice:'next', action: 'battle', monster },
+    }
+    );
     await player.save();
     return res.send({ player, field, event, actions });
-    // 상대 몬스터도 확률적으로 공격, 방어
-    // choice에 따라 몬스터와 전투 결과 (미완성)
   
   }
   //이동할 수 있는 방향으로의 버튼 렌더링

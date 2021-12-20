@@ -20,6 +20,7 @@
 
         <div id="status">HP: <span id="HP"></span></div>
         <div id="game"></div>
+        <div id="monster" style="white-space: pre;"></div>
         <div id="event_result"></div>
         <div id="control"></div>
         <div>
@@ -81,6 +82,12 @@
           });
 
           if (event) {
+            if (event.monster){
+              $('#monster').show();
+              $('#monster').text(event.monster);
+            }else{
+              $('#monster').hide();
+            }
             $('#event_result').text(event.description);
           } else {
             $('#event_result').text('아무일도 일어나지 않았다.');
