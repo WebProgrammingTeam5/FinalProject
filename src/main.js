@@ -6,10 +6,12 @@ const { constantManager, mapManager } = require('./datas/Manager');
 const { Player, Item } = require('./models');
 const { authorization, encryptPassword } = require('./utils');
 
+const init = require('./initialize');
+
 const app = express();
 const port = 3000;
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
@@ -27,7 +29,7 @@ app.post('/signup', async (req, res) => {
   const { name, email, password } = req.body;
   const encryptedPassword = encryptPassword(password);
   if (await Player.exists({ name })) {
-    return res.status(400).send({ error: 'Player already exists' });
+    return res.send({ err: 'Player already exists' });
   }
   const player = new Player({
     name,
@@ -49,14 +51,16 @@ app.post('/signup', async (req, res) => {
 // 로그인
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  const encryptedPassword = encryptPassword(password);
+  const encryptedPassword = encryptPassword(password); 
 
-  try {
+  try { 
     const player = await Player.findOne({email, password: encryptedPassword});
     if (player !== null) {
       player.key = encryptPassword(crypto.randomBytes(20));
       await player.save();
       res.send({key : player.key});
+    } else{
+      res.send({err: 'Not Found'})
     }
   } catch(err) {
     return res.sendStatus(404);
@@ -96,7 +100,7 @@ app.post('/action', authorization, async (req, res) => {
 
     player.x = x;
     player.y = y;
-
+ 
     // 각 칸의 이벤트를 실행시키는 부분(미완성)
     const events = field.events;
     const actions = [];
@@ -110,11 +114,27 @@ app.post('/action', authorization, async (req, res) => {
       }
       if (_event.type === 'battle') {
         // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
-       const description = eventManager.getEvent('battle', _event.monster).description;
-        event = { description: description };
-        const monster = monsterManager.getMonster(_event.monster);
-        const changedHp = Math.max(0, parseInt(monster.str - player.str/10)) + Math.max(0, parseInt(monster.def - player.def/10));
-        player.incrementHP(-changedHp);
+        const description = eventManager.getEvent('battle', _event.monster).description;
+         event = { description: description };
+      //   const monster = monsterManager.getMonster(_event.monster);
+      //   const changedHp = Math.max(0, parseInt(monster.str - player.str/10)) + Math.max(0, parseInt(monster.def - player.def/10));
+      //   player.incrementHP(-changedHp);
+      // actions.push({
+      //   url: '/action',
+      //   text: ['공격'],
+      //   params: { choice, action: 'battle' },
+      // },{
+      //   url: '/action',
+      //   text: ['방어'],
+      //   params: { direction, action: 'battle' },
+      // },{
+      //   url: '/action',
+      //   text: ['아이템'],
+      //   params: { choice, action: 'battle' },
+      // }
+      // ) 
+      // 턴제 전투 시스템 (미완성)
+      
         
       } else if (_event.type === 'item') {
         const description = eventManager.getEvent('item', _event.item).description;

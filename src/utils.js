@@ -9,6 +9,7 @@ const encryptPassword = (password) => {
 // header의 Authorization으로 이용자 검색
 const authorization = async (req, res, next) => {
   const { authorization } = req.headers;
+  console.log(authorization);
   if (!authorization) return res.sendStatus(401);
   const [bearer, key] = authorization.split(' ');
   if (bearer !== 'Bearer') return res.sendStatus(401);
