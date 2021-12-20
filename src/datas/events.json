@@ -1,5 +1,11 @@
 [
   {
+    //"type": "none",
+    "description": "아무 일도 일어나지 않았다.",
+    //"id": 1
+  },
+  
+  {
     "type": "battle",
     "description": "전투1",
     "id": 1
@@ -24,6 +30,7 @@
     "description": "전투5",
     "id": 5
   },
+  
   {
     "type": "item",
     "description": "아이템1을 얻었다.",
@@ -54,4 +61,10 @@
     "description": "아이템6을 얻었다.",
     "id": 1003
   }
+  
+  {
+    "type": "restore",
+    "description": "hp restored",
+    //"id": 1
+  },
 ]
