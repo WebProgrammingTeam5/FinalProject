@@ -16,15 +16,13 @@
     <div id="status">HP: <span id="HP"></span></div>
     <div id="game"></div>
     <div id="event_result"></div>
-    <div id="control">
-      <button value="1">동</button>
-      <button value="3">서</button>
-      <button value="2">남</button>
-      <button value="0">북</button>
-    </div>
+    <div id="control"></div>
     <div>
-      <button onclick="{localStorage.removeItem('_key'); location.href='/';}">로그아웃</button>
+      <button onclick="{localStorage.removeItem('_key'); location.href='/';}">
+        로그아웃
+      </button>
     </div>
+    <div id="inventory">인벤토리</div>
 
     <script>
       const sendAction = (url, params = {}) => {
@@ -37,7 +35,6 @@
           data: $.param(params),
         }).done((req) => {
           const { player, field, event, actions } = req;
-
           $('#game').text(field.description);
           $('#position').text(`(${field.x},${field.y})`);
           const x = field.x;
@@ -45,7 +42,7 @@
 
           $('#control').html('');
           req.actions.forEach((action) => {
-            const dom = $('<button></button');
+            const dom = $('<button></button>');
             dom.text(action.text);
             dom.bind('click', function () {
               sendAction(action.url, action.params);
@@ -54,7 +51,13 @@
             $('#control').append(dom);
           });
 
-          
+          $('#inventory').html('');
+
+          req.player.item.forEach((item) => {
+            const itemBox = $('<div></div>');
+            itemBox.text(item.name);
+            $('#inventory').append(itemBox);
+          });
 
           if (event) {
             $('#event_result').text(event.description);

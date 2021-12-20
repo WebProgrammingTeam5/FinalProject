@@ -6,12 +6,12 @@ const { constantManager, mapManager } = require('./datas/Manager');
 const { Player, Item } = require('./models');
 const { authorization, encryptPassword } = require('./utils');
 
-const init = require('./initialize');
+// const init = require('./initialize');
 
 const app = express();
 const port = 3000;
 
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.urlencoded({ extended: true }));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
@@ -22,6 +22,10 @@ app.get('/', (req, res) => {
 
 app.get('/game', (req, res) => {
   res.render('game');
+});
+
+app.get('/dead', (req, res) => {
+  res.render('dead');
 });
 
 // 신규 유저 등록(email, password)
@@ -37,6 +41,7 @@ app.post('/signup', async (req, res) => {
     password: encryptedPassword,
     maxHP: 10,
     HP: 10,
+    item: [{ name: '기본 아이템' }],
     level: 1, // 레벨 시스템 추가
     exp: 0,
     str: 5,
@@ -51,18 +56,18 @@ app.post('/signup', async (req, res) => {
 // 로그인
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  const encryptedPassword = encryptPassword(password); 
+  const encryptedPassword = encryptPassword(password);
 
-  try { 
-    const player = await Player.findOne({email, password: encryptedPassword});
+  try {
+    const player = await Player.findOne({ email, password: encryptedPassword });
     if (player !== null) {
       player.key = encryptPassword(crypto.randomBytes(20));
       await player.save();
-      res.send({key : player.key});
-    } else{
-      res.send({err: 'Not Found'})
+      res.send({ key: player.key });
+    } else {
+      res.send({ err: 'Not Found' });
     }
-  } catch(err) {
+  } catch (err) {
     return res.sendStatus(404);
   }
 });
@@ -100,44 +105,48 @@ app.post('/action', authorization, async (req, res) => {
 
     player.x = x;
     player.y = y;
- 
+
     // 각 칸의 이벤트를 실행시키는 부분(미완성)
     const events = field.events;
     const actions = [];
-    if (events.length > 0) {
+    if (events && events.length > 0) {
       const random = Math.random() * 100;
       let _event;
-      if ( random < (events[0].percent) ) {
+      if (random < events[0].percent) {
         _event = events[0];
       } else {
         _event = events[1];
       }
       if (_event.type === 'battle') {
         // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
-        const description = eventManager.getEvent('battle', _event.monster).description;
-         event = { description: description };
-      //   const monster = monsterManager.getMonster(_event.monster);
-      //   const changedHp = Math.max(0, parseInt(monster.str - player.str/10)) + Math.max(0, parseInt(monster.def - player.def/10));
-      //   player.incrementHP(-changedHp);
-      // actions.push({
-      //   url: '/action',
-      //   text: ['공격'],
-      //   params: { choice, action: 'battle' },
-      // },{
-      //   url: '/action',
-      //   text: ['방어'],
-      //   params: { direction, action: 'battle' },
-      // },{
-      //   url: '/action',
-      //   text: ['아이템'],
-      //   params: { choice, action: 'battle' },
-      // }
-      // ) 
-      // 턴제 전투 시스템 (미완성)
-      
-        
+        const description = eventManager.getEvent(
+          'battle',
+          _event.monster
+        ).description;
+        event = { description: description };
+        //   const monster = monsterManager.getMonster(_event.monster);
+        //   const changedHp = Math.max(0, parseInt(monster.str - player.str/10)) + Math.max(0, parseInt(monster.def - player.def/10));
+        //   player.incrementHP(-changedHp);
+        // actions.push({
+        //   url: '/action',
+        //   text: ['공격'],
+        //   params: { choice, action: 'battle' },
+        // },{
+        //   url: '/action',
+        //   text: ['방어'],
+        //   params: { direction, action: 'battle' },
+        // },{
+        //   url: '/action',
+        //   text: ['아이템'],
+        //   params: { choice, action: 'battle' },
+        // }
+        // )
+        // 턴제 전투 시스템 (미완성)
       } else if (_event.type === 'item') {
-        const description = eventManager.getEvent('item', _event.item).description;
+        const description = eventManager.getEvent(
+          'item',
+          _event.item
+        ).description;
         event = { description: description };
         const item = itemManager.getMonster(_event.item);
         player.str += item.str;
@@ -147,7 +156,6 @@ app.post('/action', authorization, async (req, res) => {
     await player.save();
   }
   //이동할 수 있는 방향으로의 버튼 렌더링
-  console.log(player);
   field.canGo.forEach((direction, i) => {
     actions.push({
       url: '/action',
@@ -157,6 +165,22 @@ app.post('/action', authorization, async (req, res) => {
   });
 
   return res.send({ player, field, event, actions });
+});
+
+app.post('/reborn', authorization, async (req, res) => {
+  const player = req.player;
+  player.HP = player.MaxHP;
+  player.x = 0;
+  player.y = 0;
+  const getRandomNumber = () => {
+    return Math.floor(Math.random() * player.item.length);
+  };
+  if (player.item.length > 0) {
+    player.item.pop(player.item[getRandomNumber()]);
+  }
+  await player.save();
+
+  return res.send({ player });
 });
 
 app.listen(port, () => {
