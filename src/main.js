@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-const { constantManager, mapManager, eventManager, itemManager } = require('./datas/Manager');
+const { constantManager, mapManager, eventManager, itemManager, monsterManager } = require('./datas/Manager');
 const { Player, Item } = require('./models');
 const { authorization, encryptPassword } = require('./utils');
 
@@ -136,29 +136,16 @@ app.post('/action', authorization, async (req, res) => {
       if (_event.type === 'battle') {
         console.log('battle');
         // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
-        const description = eventManager.getEvent(
-          'battle',
-          _event.monster
-        ).description;
-        event = { description: description };
-        //   const monster = monsterManager.getMonster(_event.monster);
+        const monster = monsterManager.getMonster(_event.monster);
+        event = { description: `${monster.name}을(를) 마주쳤다!` };
         //   const changedHp = Math.max(0, parseInt(monster.str - player.str/10)) + Math.max(0, parseInt(monster.def - player.def/10));
         //   player.incrementHP(-changedHp);
         actions.push({
           url: '/action',
-          text: ['공격'],
-          params: { choice:'att', action: 'battle' },
-        },{
-          url: '/action',
-          text: ['방어'],
-          params: { choice:'def', action: 'battle' },
-        },{
-          url: '/action',
-          text: ['아이템'],
-          params: { choice:'item', action: 'battle' },
+          text: ['다음'],
+          params: { choice:'next', action: 'battle' },
         }
         );
-        console.log(player);
         await player.save();
         return res.send({ player, field, event, actions });
         // 턴제 전투 시스템 - battle용 버튼 렌더링 (미완성)
@@ -186,6 +173,7 @@ app.post('/action', authorization, async (req, res) => {
     let x = player.x;
     let y = player.y;
     field = mapManager.getField(x,y);
+    
     event = {description: '턴제 전투 중 무엇을 할까'}
     actions.push({
       url: '/action',
