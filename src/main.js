@@ -49,6 +49,10 @@ app.post('/signup',
     email,
     password: encryptedPassword,
     item: [{ name: '기본 아이템' }],
+    
+    HP: Math.floor(Math.random()*10) + 6,
+    str: Math.floor(Math.random()*10) + 6,
+    def: Math.floor(Math.random()*10) + 6, // 능력치 5에서 15사이로 랜덤 설정
   });
   await player.save();
   return res.send({ _id: player._id });
