@@ -54,7 +54,7 @@ class newMapManager extends Manager {
         y: field.y,
         description: field.description,
         canGo: getDirection(field.x, field.y),
-        // events: field.events,
+        events: field.events,
       };
     });
   }
@@ -63,22 +63,22 @@ class newMapManager extends Manager {
   }
 }
 
-// class EventManager extends Manager {
-//   constructor(events) {
-//     super();
-//     this.events = [];
-// 
-//     events.forEach((event) =>
-//         this.events[`${event.type}, ${event.id}`] = {
-//           type: event.type,
-//           description: event.description,
-//           id: event.id,
-//         });
-//   }
-//   getEvent(type, id) {
-//     return this.events[`${type}, ${id}`];
-//   }
-// };
+class EventManager extends Manager {
+  constructor(events) {
+    super();
+    this.events = [];
+
+    events.forEach((event) =>
+        this.events[`${event.type}, ${event.id}`] = {
+          type: event.type,
+          description: event.description,
+          id: event.id,
+        });
+  }
+  getEvent(type, id) {
+    return this.events[`${type}, ${id}`];
+  }
+};
 
 // class MonsterManager extends Manager {
 //   constructor(monsters) {
@@ -140,7 +140,7 @@ const mapManager = new newMapManager(
 module.exports = {
   constantManager,
   mapManager,
-//   eventManager,
+  eventManager,
 //   monsterManager,
 //   itemManager,
 };
