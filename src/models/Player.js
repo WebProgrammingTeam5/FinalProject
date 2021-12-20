@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const playerSchema = new Schema({
   name: String,
-  email : String,
-  password : String,
+  email: String,
+  password: String,
   key: String,
-
+  item: [{ name: String }],
   level: Number,
   exp: Number,
 

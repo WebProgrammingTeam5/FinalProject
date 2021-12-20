@@ -8,6 +8,7 @@
   </head>
 
   <body>
+<<<<<<< HEAD
     <div id="parent" style="width: 100%; height: 100%;">
       <div>
         <div id="map" style="width: 50%; height:100%; float: right; display: flex; justify-content: center; align-items: center;">
@@ -16,10 +17,19 @@
       </div>
       <div id="interface" style="width: 50%; height:60%; float: left; display: flex; justify-content: center; align-items: center;">
         <div>
+=======
+  <div id="parent" style="width: 100%; height: 100%;">
+      <div id="map" style="width: 50%; height:100%; float: right; display: flex; justify-content: center; align-items: center;">
+          map자리
+      </div>
+      <div id="interface" style="width: 50%; height:60%; float: left; display: flex; justify-content: center; align-items: center;">
+       <div>
+>>>>>>> 51423165d989649272e2956579851fd28b73b47e
         <div>
           현재 위치 :
           <span id="position"></span>
         </div>
+<<<<<<< HEAD
 
         <div id="status">HP: <span id="HP"></span></div>
         <div id="game"></div>
@@ -37,7 +47,24 @@
       </div>
     </div>
 
+=======
+>>>>>>> 51423165d989649272e2956579851fd28b73b47e
 
+        <div id="status">HP: <span id="HP"></span></div>
+        <div id="game"></div>
+        <div id="event_result"></div>
+        <div id="control"></div>
+        <div>
+          <button onclick="{localStorage.removeItem('_key'); location.href='/';}">
+            로그아웃
+          </button>
+        </div>
+        
+        <div id="inventory">인벤토리</div>
+       </div>
+      </div> 
+  </div>
+    
     <script>
       const sendAction = (url, params = {}) => {
         $.ajax({
@@ -49,7 +76,6 @@
           data: $.param(params),
         }).done((req) => {
           const { player, field, event, actions } = req;
-
           $('#game').text(field.description);
           $('#position').text(`(${field.x},${field.y})`);
           const x = field.x;
@@ -57,7 +83,7 @@
 
           $('#control').html('');
           req.actions.forEach((action) => {
-            const dom = $('<button></button');
+            const dom = $('<button></button>');
             dom.text(action.text);
             dom.bind('click', function () {
               sendAction(action.url, action.params);
@@ -66,7 +92,13 @@
             $('#control').append(dom);
           });
 
-          
+          $('#inventory').html('');
+
+          req.player.item.forEach((item) => {
+            const itemBox = $('<div></div>');
+            itemBox.text(item.name);
+            $('#inventory').append(itemBox);
+          });
 
           if (event) {
             $('#event_result').text(event.description);
