@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+const { body, validationResult } = require("express-validator");
 const { constantManager, mapManager, eventManager, itemManager, monsterManager } = require('./datas/Manager');
 const { Player, Item } = require('./models');
 const { authorization, encryptPassword } = require('./utils');
@@ -29,7 +30,15 @@ app.get('/dead', (req, res) => {
 });
 
 // 신규 유저 등록(email, password)
-app.post('/signup', async (req, res) => {
+app.post('/signup',
+    body("email").isEmail(),
+    body("name").isLength({ min: 3, max: 10 }), 
+    body("password").isLength({ min: 6, max: 12 }),
+    async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   const { name, email, password } = req.body;
   const encryptedPassword = encryptPassword(password);
   if (await Player.exists({ name })) {
