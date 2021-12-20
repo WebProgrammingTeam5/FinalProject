@@ -121,39 +121,6 @@ app.post('/action', authorization, async (req, res) => {
       if (_event.type === 'battle') {
         console.log('battle');
         // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
-<<<<<<< HEAD
-        const description = eventManager.getEvent('battle', _event.monster).description;
-        event = { description: description };
-        // const monster = monsterManager.getMonster(_event.monster);
-        // const changedHp = Math.max(0, parseInt(monster.str - player.str/10)) + Math.max(0, parseInt(monster.def - player.def/10));
-        // player.incrementHP(-changedHp);
-      
-      actions.push({
-        url: '/action',
-        text: ['공격'],
-        params: { choice:'att', action: 'battle' },
-      },{
-        url: '/action',
-        text: ['방어'],
-        params: { choice:'def', action: 'battle' },
-      },{
-        url: '/action',
-        text: ['아이템'],
-        params: { choice:'item', action: 'battle' },
-      }
-      ) 
-      return res.send({ player, field, event, actions });
-      // 턴제 전투 시스템 (미완성)
-      
-        
-      } else if (_event.type === 'item') {
-        console.log('item')
-        // const description = eventManager.getEvent('item', _event.item).description;
-        // event = { description: description };
-        // const item = itemManager.getMonster(_event.item);
-        // player.str += item.str;
-        // player.def += item.def;
-=======
         const description = eventManager.getEvent(
           'battle',
           _event.monster
@@ -188,32 +155,20 @@ app.post('/action', authorization, async (req, res) => {
         const item = itemManager.getMonster(_event.item);
         player.str += item.str;
         player.def += item.def;
->>>>>>> 51423165d989649272e2956579851fd28b73b47e
       }
     } 
     await player.save();
   }
   else if(action === 'battle'){
-<<<<<<< HEAD
-    console.log('hi');
-    const choice = req.body.choice
-=======
     console.log('battle mode');
     const choice = req.body.choice;
->>>>>>> 51423165d989649272e2956579851fd28b73b47e
     console.log(choice);
     let x = player.x;
     let y = player.y;
     return res.send({ player, field, event, actions });
-<<<<<<< HEAD
-    // choice에 따라 몬스터와 전투 결과
-    
-    
-=======
     // 상대 몬스터도 확률적으로 공격, 방어
     // choice에 따라 몬스터와 전투 결과 (미완성)
   
->>>>>>> 51423165d989649272e2956579851fd28b73b47e
   }
   //이동할 수 있는 방향으로의 버튼 렌더링
   field.canGo.forEach((direction, i) => {

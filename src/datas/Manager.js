@@ -20,29 +20,6 @@ const getDirection = (x, y) => {
   return res;
 };
 
-// Deprecated
-// class MapManager extends Manager {
-//   constructor(datas) {
-//     super();
-//     this.id = datas.id;
-//     this.fields = {};
-
-//     datas.fields.forEach((field) => {
-//       this.fields[`${field[0]}_${field[1]}`] = {
-//         x: field[0],
-//         y: field[1],
-//         description: field[2],
-//         canGo: field[3],
-//         events: field[4],
-//       };
-//     });
-//   }
-
-//   getField(x, y) {
-//     return this.fields[`${x}_${y}`];
-//   }
-// }
-
 class newMapManager extends Manager {
   constructor(datas) {
     super();
@@ -99,23 +76,23 @@ class EventManager extends Manager {
 //   }
 // };
 
-// class ItemManager extends Manager {
-//   constructor(items) {
-//     super();
-//     this.items = [];
+class ItemManager extends Manager {
+  constructor(items) {
+    super();
+    this.items = [];
 
-//     items.forEach((item) =>
-//         this.items[`${item.id}`] = {
-//           id: item.id,
-//           name: item.name,
-//           str: item.str,
-//           def: item.def,
-//         });
-//   }
-//   getItem( id ) {
-//     return this.items[`${id}`];
-//   }
-// };
+    items.forEach((item) =>
+        this.items[`${item.id}`] = {
+          id: item.id,
+          name: item.name,
+          str: item.str,
+          def: item.def,
+        });
+  }
+  getItem( id ) {
+    return this.items[`${id}`];
+  }
+};
 
 const constantManager = new ConstantManager(
   JSON.parse(fs.readFileSync(__dirname + '/constants.json'))
@@ -133,14 +110,14 @@ const eventManager = new EventManager(
 //     JSON.parse(fs.readFileSync(__dirname + '/monsters.json'))
 // );
 
-// const itemManager = new ItemManager(
-//     JSON.parse(fs.readFileSync(__dirname + '/items.json'))
-// );
+const itemManager = new ItemManager(
+    JSON.parse(fs.readFileSync(__dirname + '/items.json'))
+);
 
 module.exports = {
   constantManager,
   mapManager,
   eventManager,
 //   monsterManager,
-//   itemManager,
+  itemManager,
 };
