@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-const { constantManager, mapManager } = require('./datas/Manager');
+const { constantManager, mapManager, eventManager } = require('./datas/Manager');
 const { Player, Item } = require('./models');
 const { authorization, encryptPassword } = require('./utils');
 
@@ -85,7 +85,7 @@ app.post('/action', authorization, async (req, res) => {
     if (!field) res.sendStatus(400);
   } else if (action === 'move') {
     const direction = parseInt(req.body.direction, 0); // 0 북. 1 동 . 2 남. 3 서.
-    console.log(player);
+    console.log('new direction input');
     let x = player.x;
     let y = player.y;
     // 플레이어 이동
@@ -108,6 +108,7 @@ app.post('/action', authorization, async (req, res) => {
 
     // 각 칸의 이벤트를 실행시키는 부분(미완성)
     const events = field.events;
+    console.log(events);
     const actions = [];
     if (events && events.length > 0) {
       const random = Math.random() * 100;
@@ -118,6 +119,7 @@ app.post('/action', authorization, async (req, res) => {
         _event = events[1];
       }
       if (_event.type === 'battle') {
+        console.log('battle');
         // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
         const description = eventManager.getEvent(
           'battle',
@@ -127,22 +129,24 @@ app.post('/action', authorization, async (req, res) => {
         //   const monster = monsterManager.getMonster(_event.monster);
         //   const changedHp = Math.max(0, parseInt(monster.str - player.str/10)) + Math.max(0, parseInt(monster.def - player.def/10));
         //   player.incrementHP(-changedHp);
-        // actions.push({
-        //   url: '/action',
-        //   text: ['공격'],
-        //   params: { choice, action: 'battle' },
-        // },{
-        //   url: '/action',
-        //   text: ['방어'],
-        //   params: { direction, action: 'battle' },
-        // },{
-        //   url: '/action',
-        //   text: ['아이템'],
-        //   params: { choice, action: 'battle' },
-        // }
-        // )
-        // 턴제 전투 시스템 (미완성)
+        actions.push({
+          url: '/action',
+          text: ['공격'],
+          params: { choice, action: 'battle' },
+        },{
+          url: '/action',
+          text: ['방어'],
+          params: { direction, action: 'battle' },
+        },{
+          url: '/action',
+          text: ['아이템'],
+          params: { choice, action: 'battle' },
+        }
+        );
+        return res.send({ player, field, event, actions });
+        // 턴제 전투 시스템 - battle용 버튼 렌더링 (미완성)
       } else if (_event.type === 'item') {
+        console.log('item');
         const description = eventManager.getEvent(
           'item',
           _event.item
@@ -154,6 +158,17 @@ app.post('/action', authorization, async (req, res) => {
       }
     }
     await player.save();
+  }
+  else if(action === 'battle'){
+    console.log('battle mode');
+    const choice = req.body.choice;
+    console.log(choice);
+    let x = player.x;
+    let y = player.y;
+    return res.send({ player, field, event, actions });
+    // 상대 몬스터도 확률적으로 공격, 방어
+    // choice에 따라 몬스터와 전투 결과 (미완성)
+  
   }
   //이동할 수 있는 방향으로의 버튼 렌더링
   field.canGo.forEach((direction, i) => {
