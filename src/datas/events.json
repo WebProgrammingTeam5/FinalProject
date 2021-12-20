@@ -1,12 +1,57 @@
 [
   {
     "type": "battle",
-    "description": "전투",
-    "monsterId": "1"
+    "description": "전투1",
+    "id": 1
+  },
+  {
+    "type": "battle",
+    "description": "전투2",
+    "id": 2
+  },
+  {
+    "type": "battle",
+    "description": "전투3",
+    "id": 3
+  },
+  {
+    "type": "battle",
+    "description": "전투4",
+    "id": 4
+  },
+  {
+    "type": "battle",
+    "description": "전투5",
+    "id": 5
   },
   {
     "type": "item",
-    "description": "아이템을 얻었다.",
-    "itemId": 1
+    "description": "아이템1을 얻었다.",
+    "id": 1
+  },
+  {
+    "type": "item",
+    "description": "아이템2을 얻었다.",
+    "id": 2
+  },
+  {
+    "type": "item",
+    "description": "아이템3을 얻었다.",
+    "id": 3
+  },
+  {
+    "type": "item",
+    "description": "아이템4을 얻었다.",
+    "id": 1001
+  },
+  {
+    "type": "item",
+    "description": "아이템5을 얻었다.",
+    "id": 1002
+  },
+  {
+    "type": "item",
+    "description": "아이템6을 얻었다.",
+    "id": 1003
   }
 ]

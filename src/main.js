@@ -22,15 +22,17 @@ app.get('/game', (req, res) => {
   res.render('game');
 });
 
-// 신규 유저 등록
+// 신규 유저 등록(email, password)
 app.post('/signup', async (req, res) => {
-  const { name } = req.body;
+  const { name, email, password } = req.body;
+  const encryptedPassword = encryptPassword(password);
   if (await Player.exists({ name })) {
     return res.status(400).send({ error: 'Player already exists' });
   }
-  const key = encryptPassword(crypto.randomBytes(20));
   const player = new Player({
     name,
+    email,
+    password: encryptedPassword,
     maxHP: 10,
     HP: 10,
     level: 1, // 레벨 시스템 추가
@@ -39,10 +41,26 @@ app.post('/signup', async (req, res) => {
     def: 5,
     x: 0,
     y: 0,
-    key,
   });
   await player.save();
-  return res.send({ key });
+  return res.send({ _id: player._id });
+});
+
+// 로그인
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const encryptedPassword = encryptPassword(password);
+
+  try {
+    const player = await Player.findOne({email, password: encryptedPassword});
+    if (player !== null) {
+      player.key = encryptPassword(crypto.randomBytes(20));
+      await player.save();
+      res.send({key : player.key});
+    }
+  } catch(err) {
+    return res.sendStatus(404);
+  }
 });
 
 // 게임 진행
@@ -80,21 +98,32 @@ app.post('/action', authorization, async (req, res) => {
     player.y = y;
 
     // 각 칸의 이벤트를 실행시키는 부분(미완성)
-    // const events = field.events;
-    // const actions = [];
-    // if (events.length > 0) {
-    //   // TODO : 확률별로 이벤트 발생하도록 변경
-    //   const _event = events[0];
-    //   if (_event.type === 'battle') {
-    //     // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
-    //     event = { description: '늑대와 마주쳐 싸움을 벌였다.' };
-    //     player.incrementHP(-1);
-    //   } else if (_event.type === 'item') {
-    //     event = { description: '포션을 획득해 체력을 회복했다.' };
-    //     player.incrementHP(1);
-    //     player.HP = Math.min(player.maxHP, player.HP + 1);
-    //   }
-    // }
+    const events = field.events;
+    const actions = [];
+    if (events.length > 0) {
+      const random = Math.random() * 100;
+      let _event;
+      if ( random < (events[0].percent) ) {
+        _event = events[0];
+      } else {
+        _event = events[1];
+      }
+      if (_event.type === 'battle') {
+        // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
+       const description = eventManager.getEvent('battle', _event.monster).description;
+        event = { description: description };
+        const monster = monsterManager.getMonster(_event.monster);
+        const changedHp = Math.max(0, parseInt(monster.str - player.str/10)) + Math.max(0, parseInt(monster.def - player.def/10));
+        player.incrementHP(-changedHp);
+        
+      } else if (_event.type === 'item') {
+        const description = eventManager.getEvent('item', _event.item).description;
+        event = { description: description };
+        const item = itemManager.getMonster(_event.item);
+        player.str += item.str;
+        player.def += item.def;
+      }
+    }
     await player.save();
   }
   //이동할 수 있는 방향으로의 버튼 렌더링
