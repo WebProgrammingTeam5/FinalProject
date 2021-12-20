@@ -46,7 +46,7 @@ const getDirection = (x, y) => {
 class newMapManager extends Manager {
   constructor(datas) {
     super();
-    this.fields = [];
+    this.fields = {};
 
     datas.forEach((field) => {
       this.fields[`${field.x},${field.y}`] = {
@@ -54,7 +54,7 @@ class newMapManager extends Manager {
         y: field.y,
         description: field.description,
         canGo: getDirection(field.x, field.y),
-        events: field[4],
+        // events: field.events,
       };
     });
   }

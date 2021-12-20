@@ -50,13 +50,15 @@ app.post('/action', authorization, async (req, res) => {
   const { action } = req.body;
   const player = req.player;
   let event = null;
-  let field = null;
+  let field = {};
   let actions = [];
 
   if (action === 'query') {
-    field = mapManager.getField(0, 0);
+    field = mapManager.getField(player.x, player.y);
+    if (!field) res.sendStatus(400);
   } else if (action === 'move') {
     const direction = parseInt(req.body.direction, 0); // 0 북. 1 동 . 2 남. 3 서.
+    console.log(player);
     let x = player.x;
     let y = player.y;
     // 플레이어 이동
@@ -96,6 +98,7 @@ app.post('/action', authorization, async (req, res) => {
     await player.save();
   }
   //이동할 수 있는 방향으로의 버튼 렌더링
+  console.log(player);
   field.canGo.forEach((direction, i) => {
     actions.push({
       url: '/action',
@@ -103,6 +106,7 @@ app.post('/action', authorization, async (req, res) => {
       params: { direction, action: 'move' },
     });
   });
+
   return res.send({ player, field, event, actions });
 });
 
