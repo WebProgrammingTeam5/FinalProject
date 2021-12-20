@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-const { constantManager, mapManager, eventManager } = require('./datas/Manager');
+const { constantManager, mapManager, eventManager, itemManager } = require('./datas/Manager');
 const { Player, Item } = require('./models');
 const { authorization, encryptPassword } = require('./utils');
 
@@ -89,6 +89,7 @@ app.post('/action', authorization, async (req, res) => {
     let x = player.x;
     let y = player.y;
     // 플레이어 이동
+    console.log(direction);
     if (direction === 0) {
       y += 1;
     } else if (direction === 1) {
@@ -97,6 +98,20 @@ app.post('/action', authorization, async (req, res) => {
       y -= 1;
     } else if (direction === 3) {
       x -= 1;
+    } else if (direction === -1) {
+      field = mapManager.getField(x,y);
+      event = { description: '무사히 도망쳤다!' };
+      player.battleCount = 1;
+      await player.save();
+      let actions = [];
+      field.canGo.forEach((direction, i) => {
+        actions.push({
+          url: '/action',
+          text: ['북', '동', '남', '서'][direction],
+          params: { direction, action: 'move' },
+        });
+      });
+      return res.send({ player, field, event, actions });
     } else {
       res.sendStatus(400);
     }
@@ -132,17 +147,19 @@ app.post('/action', authorization, async (req, res) => {
         actions.push({
           url: '/action',
           text: ['공격'],
-          params: { choice, action: 'battle' },
+          params: { choice:'att', action: 'battle' },
         },{
           url: '/action',
           text: ['방어'],
-          params: { direction, action: 'battle' },
+          params: { choice:'def', action: 'battle' },
         },{
           url: '/action',
           text: ['아이템'],
-          params: { choice, action: 'battle' },
+          params: { choice:'item', action: 'battle' },
         }
         );
+        console.log(player);
+        await player.save();
         return res.send({ player, field, event, actions });
         // 턴제 전투 시스템 - battle용 버튼 렌더링 (미완성)
       } else if (_event.type === 'item') {
@@ -152,9 +169,11 @@ app.post('/action', authorization, async (req, res) => {
           _event.item
         ).description;
         event = { description: description };
-        const item = itemManager.getMonster(_event.item);
-        player.str += item.str;
-        player.def += item.def;
+        const item = itemManager.getItem(_event.item);
+        player.item.push(item);
+        // player.str += item.str;
+        // player.def += item.def;
+        // 능력치 증가는 스탯창에서 보유 아이템 리스트 모아서 한꺼번에 계산하는 것이 좋을 것 같아요!
       }
     } 
     await player.save();
@@ -163,8 +182,36 @@ app.post('/action', authorization, async (req, res) => {
     console.log('battle mode');
     const choice = req.body.choice;
     console.log(choice);
+    console.log(player);
     let x = player.x;
     let y = player.y;
+    field = mapManager.getField(x,y);
+    event = {description: '턴제 전투 중 무엇을 할까'}
+    actions.push({
+      url: '/action',
+      text: ['공격'],
+      params: { choice:'att', action: 'battle' },
+    },{
+      url: '/action',
+      text: ['방어'],
+      params: { choice:'def', action: 'battle' },
+    },{
+      url: '/action',
+      text: ['아이템'],
+      params: { choice:'item', action: 'battle' },
+    }
+    );
+    console.log(player.battleCount);
+    if (player.battleCount >= 1){
+      actions.push({
+        url: '/action',
+        text: ['도망'],
+        params: { direction: -1, action: 'move' },
+      })
+    }
+    player.x = x; player.y = y;
+    player.battleCount++;
+    await player.save();
     return res.send({ player, field, event, actions });
     // 상대 몬스터도 확률적으로 공격, 방어
     // choice에 따라 몬스터와 전투 결과 (미완성)

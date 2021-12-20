@@ -6,7 +6,7 @@ const playerSchema = new Schema({
   email: String,
   password: String,
   key: String,
-  item: [{ name: String }],
+  item: [{ id: Number, name:String, str:Number, def:Number }],
   level: Number,
   exp: Number,
 
@@ -14,6 +14,7 @@ const playerSchema = new Schema({
   HP: { type: Number, default: 10 },
   str: { type: Number, default: 5 },
   def: { type: Number, default: 5 },
+  battleCount: {type: Number, default: 1},
   x: { type: Number, default: 0 },
   y: { type: Number, default: 0 },
 });
