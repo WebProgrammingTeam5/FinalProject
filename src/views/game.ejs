@@ -69,7 +69,9 @@
           data: $.param(params),
         }).done((req) => {
           const { player, field, event, actions } = req;
-
+          if (player.HP <= 0) {
+            location.href = '/dead';
+          }
           let map = '';
           for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {

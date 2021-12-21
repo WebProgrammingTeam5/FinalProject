@@ -140,6 +140,7 @@ app.post('/action', authorization, async (req, res) => {
       const description = req.body.description;
       event = { description };
       player.battleCount = 1;
+      player.HP = 0;
       await player.save();
       let actions = [];
       field.canGo.forEach((direction, i) => {
@@ -351,7 +352,7 @@ app.post('/action', authorization, async (req, res) => {
 
 app.post('/reborn', authorization, async (req, res) => {
   const player = req.player;
-  player.HP = player.MaxHP;
+  player.HP = player.maxHP;
   player.x = 0;
   player.y = 0;
   const getRandomNumber = () => {
