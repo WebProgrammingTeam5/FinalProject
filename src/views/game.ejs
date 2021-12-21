@@ -53,7 +53,7 @@
         "
       >
         현재 위치
-        <!-- <span id="position"></span> -->
+        <span id="position"></span>
         <div id="map"></div>
       </div>
     </div>
@@ -87,8 +87,6 @@
           $('#level').text(player.level);
           $('#name').text(player.name);
           $('#position').text(`(${field.x},${field.y})`);
-          const x = field.x;
-          const y = field.y;
 
           $('#control').html('');
           req.actions.forEach((action) => {

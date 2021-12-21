@@ -16,7 +16,6 @@
         location.href = '/';
       }
         $("#reborn").bind("click",()=>{
-            location.href='/';
             $.ajax({
           url: '/reborn',
           headers: {
@@ -24,9 +23,8 @@
           },
           method: 'POST',
         }).done(()=>{
-            location.href('/');
+          location.href='/';
         })
-            
         })
     </script>
   </body>
