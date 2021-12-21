@@ -8,22 +8,32 @@
   </head>
 
   <body>
-    <div>
-      현재 위치 :
-      <span id="position"></span>
-    </div>
+  <div id="parent" style="width: 100%; height: 100%;">
+      <div id="map" style="width: 50%; height:100%; float: right; display: flex; justify-content: center; align-items: center; white-space: pre;">
+      </div>
+      <div id="interface" style="width: 50%; height:60%; float: left; display: flex; justify-content: center; align-items: center;">
+       <div>
+        <div>
+          현재 위치 :
+          <span id="position"></span>
+        </div>
 
-    <div id="status">HP: <span id="HP"></span></div>
-    <div id="game"></div>
-    <div id="event_result"></div>
-    <div id="control"></div>
-    <div>
-      <button onclick="{localStorage.removeItem('_key'); location.href='/';}">
-        로그아웃
-      </button>
-    </div>
-    <div id="inventory">인벤토리</div>
-
+        <div id="status">HP: <span id="HP"></span></div>
+        <div id="game"></div>
+        <div id="monster" style="white-space: pre;"></div>
+        <div id="event_result"></div>
+        <div id="control"></div>
+        <div>
+          <button onclick="{localStorage.removeItem('_key'); location.href='/';}">
+            로그아웃
+          </button>
+        </div>
+        
+        <div id="inventory">인벤토리</div>
+       </div>
+      </div> 
+  </div>
+    
     <script>
       const sendAction = (url, params = {}) => {
         $.ajax({
@@ -35,6 +45,18 @@
           data: $.param(params),
         }).done((req) => {
           const { player, field, event, actions } = req;
+
+          let map = '';
+          for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+              if (j === field.x && i === 9-field.y){
+                map+='■';
+              } else map+='□';
+            }
+            map += '\n';
+          }
+          $('#map').text(map.trim());
+
           $('#game').text(field.description);
           $('#position').text(`(${field.x},${field.y})`);
           const x = field.x;
@@ -60,6 +82,12 @@
           });
 
           if (event) {
+            if (event.monster){
+              $('#monster').show();
+              $('#monster').text(event.monster);
+            }else{
+              $('#monster').hide();
+            }
             $('#event_result').text(event.description);
           } else {
             $('#event_result').text('아무일도 일어나지 않았다.');
