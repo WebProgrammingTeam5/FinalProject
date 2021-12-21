@@ -53,7 +53,7 @@
         "
       >
         현재 위치
-        <!-- <span id="position"></span> -->
+        <span id="position"></span>
         <div id="map"></div>
       </div>
     </div>
@@ -69,7 +69,9 @@
           data: $.param(params),
         }).done((req) => {
           const { player, field, event, actions } = req;
-
+          if (player.HP <= 0) {
+            location.href = '/dead';
+          }
           let map = '';
           for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
@@ -87,8 +89,6 @@
           $('#level').text(player.level);
           $('#name').text(player.name);
           $('#position').text(`(${field.x},${field.y})`);
-          const x = field.x;
-          const y = field.y;
 
           $('#control').html('');
           req.actions.forEach((action) => {

@@ -2,8 +2,14 @@ const express = require('express');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-const { body, validationResult } = require("express-validator");
-const { constantManager, mapManager, eventManager, itemManager, monsterManager } = require('./datas/Manager');
+const { body, validationResult } = require('express-validator');
+const {
+  constantManager,
+  mapManager,
+  eventManager,
+  itemManager,
+  monsterManager,
+} = require('./datas/Manager');
 const { Player, Item } = require('./models');
 const { authorization, encryptPassword } = require('./utils');
 
@@ -21,6 +27,10 @@ app.get('/', (req, res) => {
   res.render('index', { gameName: constantManager.gameName });
 });
 
+app.get('/lobby', (req, res) => {
+  res.render('lobby');
+});
+
 app.get('/game', (req, res) => {
   res.render('game');
 });
@@ -30,33 +40,37 @@ app.get('/dead', (req, res) => {
 });
 
 // 신규 유저 등록(email, password)
-app.post('/signup',
+app.post(
+  '/signup',
     body("name").isLength({ min: 3, max: 10 }), 
     body("email").isEmail(),
     body("password").isLength({ min: 6, max: 12 }),
     async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
     return res.send({ errors: errors.array() });
+    } 
+    const { name, email, password } = req.body;
+    const encryptedPassword = encryptPassword(password);
+    if (await Player.exists({ name })) {
+      return res.send({ err: 'Player already exists' });
+    }
+    const maxHP = Math.floor(Math.random() * 20) + 91; // 최대체력 91에서 110사이로 랜덤 설정
+    const player = new Player({
+      name,
+      email,
+      password: encryptedPassword,
+      item: [{ name: '기본 아이템' }],
+      maxHP,
+      HP: maxHP,
+      str: Math.floor(Math.random() * 10) + 6,
+      def: Math.floor(Math.random() * 10) + 6, // 능력치 6에서 15사이로 랜덤 설정
+    });
+    await player.save();
+    return res.send({ _id: player._id });
+
   }
-  const { name, email, password } = req.body;
-  const encryptedPassword = encryptPassword(password);
-  if (await Player.exists({ name })) {
-    return res.send({ err: 'Player already exists' });
-  }
-  const player = new Player({
-    name,
-    email,
-    password: encryptedPassword,
-    item: [{ name: '기본 아이템' }],
-    
-    HP: Math.floor(Math.random()*20) + 91, // 체력 91에서 110사이로 랜덤 설정
-    str: Math.floor(Math.random()*10) + 6,
-    def: Math.floor(Math.random()*10) + 6, // 능력치 6에서 15사이로 랜덤 설정
-  });
-  await player.save();
-  return res.send({ _id: player._id });
-});
+);
 
 // 로그인
 app.post('/login', async (req, res) => {
@@ -75,6 +89,25 @@ app.post('/login', async (req, res) => {
   } catch (err) {
     return res.sendStatus(404);
   }
+});
+
+// 시작 능력치 리롤
+app.post('/reroll', authorization, async (req, res) => {
+  const { action } = req.body;
+  const player = req.player;
+
+  if (action === 'reroll') {
+    player.maxHP = Math.floor(Math.random() * 20) + 91; // 체력 91에서 110사이로 랜덤 설정
+    player.str = Math.floor(Math.random() * 10) + 6;
+    player.def = Math.floor(Math.random() * 10) + 6; // 능력치 6에서 15사이로 랜덤 설정
+    player.HP = player.maxHP;
+    player.rerollCount += 1;
+    player.save();
+  } else if (action === 'select') {
+    player.rerollCount = 6;
+    player.save();
+  }
+  return res.send({ player });
 });
 
 // 게임 진행
@@ -104,10 +137,11 @@ app.post('/action', authorization, async (req, res) => {
     } else if (direction === 3) {
       x -= 1;
     } else if (direction === -1) {
-      field = mapManager.getField(x,y);
+      field = mapManager.getField(x, y);
       const description = req.body.description;
-      event = { description};
+      event = { description };
       player.battleCount = 1;
+      player.HP = 0;
       await player.save();
       let actions = [];
       field.canGo.forEach((direction, i) => {
@@ -134,10 +168,10 @@ app.post('/action', authorization, async (req, res) => {
     if (events && events.length > 0) {
       let _event = null;
       const random = parseInt(Math.random() * 100);
-      
+
       // random 숫자가 꽂힐 과녁 만들기
       let tempPercent = [];
-      events.forEach( (e,index) => {
+      events.forEach((e, index) => {
         for (let i = 0; i < e.percent; i++) {
           tempPercent.push(index);
         }
@@ -146,7 +180,7 @@ app.post('/action', authorization, async (req, res) => {
       // events가 2개 이상이어도 가능
       const eventIndex = tempPercent[random];
       _event = events[eventIndex];
-      console.log('d'+random);
+      console.log('d' + random);
       console.log(tempPercent);
 
       if (_event.type === 'battle') {
@@ -157,12 +191,10 @@ app.post('/action', authorization, async (req, res) => {
         actions.push({
           url: '/action',
           text: ['다음'],
-          params: { choice:'next', action: 'battle', monster },
-        }
-        );
+          params: { choice: 'next', action: 'battle', monster },
+        });
         await player.save();
         return res.send({ player, field, event, actions });
-
       } else if (_event.type === 'item') {
         console.log('item');
         const description = eventManager.getEvent(
@@ -176,42 +208,49 @@ app.post('/action', authorization, async (req, res) => {
         // player.def += item.def;
         // 능력치 증가는 스탯창에서 보유 아이템 리스트 모아서 한꺼번에 계산하는 것이 좋을 것 같아요!
       }
-    } 
+    }
     await player.save();
-  }
-  else if(action === 'battle'){
+  } else if (action === 'battle') {
     console.log('battle mode');
     let x = player.x;
     let y = player.y;
-    field = mapManager.getField(x,y);
+    field = mapManager.getField(x, y);
 
     const { choice, monster } = req.body;
     console.log(choice);
-    
-    if(choice === 'next'){
-      
-      event = {monster: `${monster.name}\n${monster.hp}/${monster.maxHp}\n`, description: `${player.name}은(는) 무엇을 할까?`};
+
+    if (choice === 'next') {
+      event = {
+        monster: `${monster.name}\n${monster.hp}/${monster.maxHp}\n`,
+        description: `${player.name}은(는) 무엇을 할까?`,
+      };
       // 턴제 전투 버튼 렌더링
-      actions.push({
-        url: '/action',
-        text: ['공격'],
-        params: { choice:'attack', action: 'battle', monster },
-      },{
-        url: '/action',
-        text: ['방어'],
-        params: { choice:'defense', action: 'battle', monster },
-      }
+      actions.push(
+        {
+          url: '/action',
+          text: ['공격'],
+          params: { choice: 'attack', action: 'battle', monster },
+        },
+        {
+          url: '/action',
+          text: ['방어'],
+          params: { choice: 'defense', action: 'battle', monster },
+        }
       );
-        // 도망 카운트
+      // 도망 카운트
       console.log('battleCount: ' + player.battleCount);
 
       // 도망 카운트가 1(테스트용) 이상이면 도망 버튼 생김
-      if (player.battleCount >= 1){
+      if (player.battleCount >= 1) {
         actions.push({
           url: '/action',
           text: ['도망'],
-          params: { direction: -1, action: 'move', description: '무사히 도망쳤다!' },
-        })
+          params: {
+            direction: -1,
+            action: 'move',
+            description: '무사히 도망쳤다!',
+          },
+        });
       }
       player.battleCount++;
       await player.save();
@@ -225,68 +264,80 @@ app.post('/action', authorization, async (req, res) => {
     let playerChoice;
 
     const calDamage = (str, def) => {
-      const plusOrMinus = [1,-1];
-      if (str*2 <= def){
-        return parseInt(Math.random()*2)+1;
+      const plusOrMinus = [1, -1];
+      if (str * 2 <= def) {
+        return parseInt(Math.random() * 2) + 1;
       }
       // 공격에 가중치를 둠
-      const normalDamage = parseInt((str*2 - def) / 2);
-      const randomDamage = parseInt(Math.random()*normalDamage/4 + 1) * plusOrMinus[Math.round(Math.random())]
+      const normalDamage = parseInt((str * 2 - def) / 2);
+      const randomDamage =
+        parseInt((Math.random() * normalDamage) / 4 + 1) *
+        plusOrMinus[Math.round(Math.random())];
       console.log(randomDamage);
       const totalDamage = normalDamage + randomDamage;
       return totalDamage;
-    }
+    };
 
     // 이하 턴제 전투 시스템
     // 공격: 기본 계산된 대미지 +- 작은 랜덤 대미지
     // 방어: 방어 시 def 2배
-    if (choice === 'defense'){
+    if (choice === 'defense') {
       playerChoice = 1;
-      playerDef = player.def*2
+      playerDef = player.def * 2;
     }
     // 몬스터 행동 선택
     const monsterRandom = Math.random() * monster.maxHp;
-    if (monster.hp < monsterRandom){
+    if (monster.hp < monsterRandom) {
       // 몬스터 방어
       // hp가 적을수록 몬스터의 방어 확률 증가
       monsterChoice = 1;
-      monsterDef = monsterDef*2;
+      monsterDef = monsterDef * 2;
     } else {
       // 몬스터 공격
       monsterChoice = 0;
       const damage = calDamage(monster.str, playerDef);
-      console.log('dd'+damage);
+      console.log('dd' + damage);
       player.incrementHP(-damage);
     }
-    if (choice === 'attack'){
+    if (choice === 'attack') {
       playerChoice = 0;
       const damage = calDamage(player.str, monsterDef);
       monster.hp = Math.max(0, monster.hp - damage);
-      if (monster.hp === 0){
-        event = {description:`${monster.name}을(를) 무찔렀다!`}
+      if (monster.hp === 0) {
+        event = { description: `${monster.name}을(를) 무찔렀다!` };
         actions.push({
           url: '/action',
           text: ['다음'],
-          params: { direction:-1, action: 'move', description: '이젠 어디로 갈까?'},
-        }
-        );
+          params: {
+            direction: -1,
+            action: 'move',
+            description: '이젠 어디로 갈까?',
+          },
+        });
         return res.send({ player, field, event, actions });
       }
-    } 
+    }
     const resultDialog = [
-      [`서로 공격했다!`, `${monster.name}은(는) 방어 태세를 취한 ${player.name}을(를) 공격했다!`],
-      [`${monster.name}은(는) 방어 태세를 취했다!`, `서로 방어 태세를 취했다! 아무 일도 일어나지 않았다...`],
-    ]
-    event = {monster: `${monster.name}\n${monster.hp}/${monster.maxHp}\n`, description: resultDialog[monsterChoice][playerChoice]};
+      [
+        `서로 공격했다!`,
+        `${monster.name}은(는) 방어 태세를 취한 ${player.name}을(를) 공격했다!`,
+      ],
+      [
+        `${monster.name}은(는) 방어 태세를 취했다!`,
+        `서로 방어 태세를 취했다! 아무 일도 일어나지 않았다...`,
+      ],
+    ];
+    event = {
+      monster: `${monster.name}\n${monster.hp}/${monster.maxHp}\n`,
+      description: resultDialog[monsterChoice][playerChoice],
+    };
     actions.push({
       url: '/action',
       text: ['다음'],
-      params: { choice:'next', action: 'battle', monster },
-    }
-    );
+      params: { choice: 'next', action: 'battle', monster },
+    });
     await player.save();
     return res.send({ player, field, event, actions });
-  
   }
   //이동할 수 있는 방향으로의 버튼 렌더링
   field.canGo.forEach((direction, i) => {
@@ -302,7 +353,7 @@ app.post('/action', authorization, async (req, res) => {
 
 app.post('/reborn', authorization, async (req, res) => {
   const player = req.player;
-  player.HP = player.MaxHP;
+  player.HP = player.maxHP;
   player.x = 0;
   player.y = 0;
   const getRandomNumber = () => {

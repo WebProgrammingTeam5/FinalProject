@@ -6,15 +6,15 @@ const playerSchema = new Schema({
   email: String,
   password: String,
   key: String,
-  item: [{ id: Number, name:String, str:Number, def:Number }],
+  item: [{ id: Number, name: String, str: Number, def: Number }],
   level: { type: Number, default: 1 },
   exp: { type: Number, default: 0 },
-
   maxHP: { type: Number, default: 100 },
   HP: { type: Number, default: 100 },
   str: { type: Number, default: 10 },
   def: { type: Number, default: 10 },
-  battleCount: {type: Number, default: 1},
+  battleCount: { type: Number, default: 1 },
+  rerollCount: { type: Number, default: 0 },
   x: { type: Number, default: 0 },
   y: { type: Number, default: 0 },
 });
