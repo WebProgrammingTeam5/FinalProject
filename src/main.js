@@ -302,6 +302,7 @@ app.post('/action', authorization, async (req, res) => {
       const damage = calDamage(player.str, monsterDef);
       monster.hp = Math.max(0, monster.hp - damage);
       if (monster.hp === 0) {
+        player.incrementEXP(monsterRandom / 2); // monster의 초기 HP의 절반만큼 경험치 상승
         event = { description: `${monster.name}을(를) 무찔렀다!` };
         actions.push({
           url: '/action',
