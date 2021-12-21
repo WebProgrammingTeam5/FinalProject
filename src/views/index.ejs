@@ -30,16 +30,31 @@
     $('#form1').submit(function(e) {
        e.preventDefault();
        const action = $(this).attr('action');
+      
        $.post(action, $(this).serialize(),(res) => {
          if(res.err){
-           alert('이미 존재하는 이름입니다.')
+           alert('이미 존재하는 이름입니다.');
+         }else if(res.errors){
+           switch (res.errors[0].param) {
+            case 'name':
+               alert('플레이어 이름은 3~10글자 길이어야합니다.')
+               break;
+             case 'email':
+               alert('email의 형식이 아닙니다')
+               break;
+             case 'password':
+               alert('비밀번호는 6~12글자 길이어야합니다.')
+               break;
+           }
          }else{
           localStorage.setItem('_key', res.key);
           alert('회원가입 완료')
          }
+         
           // location.href = '/index';
          }
-       );
+         
+       ); 
      });
      $('#form').submit(function(e) {
        e.preventDefault();
