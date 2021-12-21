@@ -42,14 +42,14 @@ app.get('/dead', (req, res) => {
 // 신규 유저 등록(email, password)
 app.post(
   '/signup',
-    body("name").isLength({ min: 3, max: 10 }), 
-    body("email").isEmail(),
-    body("password").isLength({ min: 6, max: 12 }),
-    async (req, res) => {
+  body('name').isLength({ min: 3, max: 10 }),
+  body('email').isEmail(),
+  body('password').isLength({ min: 6, max: 12 }),
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-    return res.send({ errors: errors.array() });
-    } 
+      return res.send({ errors: errors.array() });
+    }
     const { name, email, password } = req.body;
     const encryptedPassword = encryptPassword(password);
     if (await Player.exists({ name })) {
@@ -68,7 +68,6 @@ app.post(
     });
     await player.save();
     return res.send({ _id: player._id });
-
   }
 );
 
@@ -141,7 +140,6 @@ app.post('/action', authorization, async (req, res) => {
       const description = req.body.description;
       event = { description };
       player.battleCount = 1;
-      player.HP = 0;
       await player.save();
       let actions = [];
       field.canGo.forEach((direction, i) => {
