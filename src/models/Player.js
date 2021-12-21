@@ -24,6 +24,17 @@ playerSchema.methods.incrementHP = function (val) {
   this.HP = Math.min(Math.max(0, hp), this.maxHP);
 };
 
+playerSchema.methods.incrementEXP = function (val) {
+  const exp = this.exp + val;
+  this.exp = Math.min(100, exp);
+  if (this.exp === 100) {
+    this.level += 1; // 경험치 100을 쌓을 때마다 level 1씩 증가
+    this.str += 2;
+    this.def += 2; // level up에 따라 player의 능력치 증가
+    this.exp = 0;
+  }
+};
+
 const Player = mongoose.model('Player', playerSchema);
 
 module.exports = Player;
