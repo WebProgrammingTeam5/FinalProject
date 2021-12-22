@@ -374,8 +374,8 @@
     "description": "블루 정글 돌거북 자리다.",
     "events": [
       { "type": "nothing", "nothing": 1, "percent": 10 },
-      { "type": "battle", "monster": 3, "percent": 80 },
-      { "type": "battle", "monster": 1002, "percent": 10 },
+      { "type": "battle", "monster": 3, "percent": 90 },
+      { "type": "battle", "monster": 1002, "percent": 0 },
       { "type": "item", "item": 1, "percent": 0 },
       { "type": "restore", "restore": 1, "percent": 0 }
     ]
@@ -493,10 +493,10 @@
     "y": 1,
     "description": "조용하다.",
     "events": [
-      { "type": "nothing", "nothing": 1, "percent": 50 },
-      { "type": "battle", "monster": 1002, "percent": 30 },
-      { "type": "item", "item": 1, "percent": 10 },
-      { "type": "item", "item": 1001, "percent": 10 },
+      { "type": "nothing", "nothing": 1, "percent": 0 },
+      { "type": "battle", "monster": 1002, "percent": 0 },
+      { "type": "item", "item": 3, "percent": 100 },
+      { "type": "item", "item": 1001, "percent": 0 },
       { "type": "restore", "restore": 1, "percent": 0 }
     ]
   },
@@ -624,10 +624,10 @@
     "y": 2,
     "description": "아무도 없다.",
     "events": [
-      { "type": "nothing", "nothing": 1, "percent": 80 },
-      { "type": "battle", "monster": 1002, "percent": 10 },
-      { "type": "item", "item": 1, "percent": 5 },
-      { "type": "item", "item": 1001, "percent": 5 },
+      { "type": "nothing", "nothing": 1, "percent": 0 },
+      { "type": "battle", "monster": 1002, "percent": 0 },
+      { "type": "item", "item": 2, "percent": 5 },
+      { "type": "item", "item": 1003, "percent": 95 },
       { "type": "restore", "restore": 1, "percent": 0 }
     ]
   },
@@ -732,10 +732,10 @@
     "y": 1,
     "description": "부쉬에 와드가 없다.",
     "events": [
-      { "type": "nothing", "nothing": 1, "percent": 80 },
-      { "type": "battle", "monster": 1005, "percent": 10 },
+      { "type": "nothing", "nothing": 1, "percent": 0 },
+      { "type": "battle", "monster": 1005, "percent": 0 },
       { "type": "item", "item": 1, "percent": 5 },
-      { "type": "item", "item": 1001, "percent": 5 },
+      { "type": "item", "item": 1002, "percent": 95 },
       { "type": "restore", "restore": 1, "percent": 0 }
     ]
   },
