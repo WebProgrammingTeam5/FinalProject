@@ -40,7 +40,7 @@
 
         $.post(action, $(this).serialize(), (res) => {
           if (res.err) {
-            alert('이미 존재하는 이름입니다.');
+            alert('이미 존재하는 이름 또는 이메일입니다.');
           } else if (res.errors) {
             switch (res.errors[0].param) {
               case 'name':
