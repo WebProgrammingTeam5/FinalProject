@@ -71,7 +71,7 @@
     </style>
   </head>
 
-  <body id="parent">
+  <body id="parent" style="font-size:80%">
     <div id="leftBar">
       <h2>LEVEL <span id="level"></span> <span id="name"></span></h2>
       <h3>현재 위치</h3>
@@ -82,7 +82,7 @@
         <div id="DEF"></div>
         <div id="EXP"></div>
         <h3>인벤토리</h3>
-        <div id="inventory" style="width:80%; height: 200px; margin:0 0 30px; overflow: auto; overflow-x: hidden; background-color: darkkhaki;"></div>
+        <div id="inventory" style="width:80%; height: 200px; margin: 0 0 20px;overflow: auto; background-color: darkkhaki; "></div>
       </div>
       <button onclick="{localStorage.removeItem('_key'); location.href='/';}">
         로그아웃
@@ -147,11 +147,13 @@
           req.player.item.forEach((item) => {
             const itemBox = $('<div id="itemBox"></div>');
             itemBox.css({
+              'width':'max-content',
               'white-space':'pre', 
               'text-align':'center',
+              'font-size':'80%',
               'background-color':'silver',
               'padding':'10px',
-              'margin':'10px 20px',
+              'margin':'10px auto',
               'border-radius':'10px'
             });
             itemBox.text(item.name + `\n(공격력 +${item.str} / 방어력 +${item.def})`);
