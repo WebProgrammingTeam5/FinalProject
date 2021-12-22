@@ -442,7 +442,7 @@
   {
     "x": 4,
     "y": 0,
-    "description": " 미니언들이 보인다.",
+    "description": "바텀 미니언들이 보인다.",
     "events": [
       { "type": "nothing", "nothing": 1, "percent": 80 },
       { "type": "battle", "monster": 1, "percent": 0 },
@@ -844,6 +844,7 @@
       { "type": "battle", "monster": 1, "percent": 10 },
       { "type": "item", "item": 1, "percent": 10 },
       { "type": "restore", "restore": 1, "percent": 0 }
+    ]
   },
   {
     "x": 7,
@@ -1035,7 +1036,7 @@
   {
     "x": 9,
     "y": 4,
-    "description": "다이브 각을 봐야겠다.",
+    "description": "바텀 다이브 각을 봐야겠다.",
     "events": [
       { "type": "nothing", "nothing": 1, "percent": 20 },
       { "type": "battle", "monster": 1, "percent": 60 },
