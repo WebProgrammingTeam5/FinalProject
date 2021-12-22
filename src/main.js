@@ -55,6 +55,9 @@ app.post(
     if (await Player.exists({ name })) {
       return res.send({ err: 'Player already exists' });
     }
+    if (await Player.exists({ email })) {
+      return res.send({ err: 'Player already exists' });
+    }
     const maxHP = Math.floor(Math.random() * 20) + 91; // 최대체력 91에서 110사이로 랜덤 설정
     const player = new Player({
       name,
@@ -239,7 +242,7 @@ app.post('/action', authorization, async (req, res) => {
       console.log('battleCount: ' + player.battleCount);
 
       // 도망 카운트가 1(테스트용) 이상이면 도망 버튼 생김
-      if (player.battleCount >= 1) {
+      if (player.battleCount >= 10 || player.HP <= player.maxHP*0.2) {
         actions.push({
           url: '/action',
           text: ['도망'],
@@ -302,8 +305,15 @@ app.post('/action', authorization, async (req, res) => {
       const damage = calDamage(player.str, monsterDef);
       monster.hp = Math.max(0, monster.hp - damage);
       if (monster.hp === 0) {
-        player.incrementEXP(monsterRandom / 2); // monster의 초기 HP의 절반만큼 경험치 상승
-        event = { description: `${monster.name}을(를) 무찔렀다!` };
+        const exp = parseInt((monster.maxHp/2) + Math.random()*6 - 3);
+        let expUpDescription = '';
+        const expUp = player.incrementEXP(exp);
+        if(expUp){ //레벨업 시
+          expUpDescription += `\n획득 경험치: ${exp}\nLevel Up!\n체력: +${expUp.upHp}\n공격력 : +${expUp.upStr}\n방어력 : +${expUp.upDef}`
+        }else{
+          expUpDescription +=`\n획득 경험치: ${exp}`;
+        }; // monster의 초기 HP의 절반만큼 경험치 상승
+        event = { description: `${monster.name}을(를) 무찔렀다!`+expUpDescription };
         actions.push({
           url: '/action',
           text: ['다음'],
@@ -313,6 +323,7 @@ app.post('/action', authorization, async (req, res) => {
             description: '이젠 어디로 갈까?',
           },
         });
+        await player.save();
         return res.send({ player, field, event, actions });
       }
     }
@@ -327,7 +338,7 @@ app.post('/action', authorization, async (req, res) => {
       ],
     ];
     event = {
-      monster: `${monster.name}\n${monster.hp}/${monster.maxHp}\n`,
+      monster: `${monster.name}\n체력:${monster.hp}/${monster.maxHp}\n`,
       description: resultDialog[monsterChoice][playerChoice],
     };
     actions.push({
