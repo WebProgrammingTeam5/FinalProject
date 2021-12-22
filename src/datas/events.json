@@ -11,37 +11,47 @@
   },
   {
     "type": "battle",
-    "description": "바위게를 공격했다.",
+    "description": "늑대를 공격했다.",
     "id": 2
   },
   {
     "type": "battle",
-    "description": "협곡의 전령을 마주쳤다.",
+    "description": "돌거북에 강타를 썼다.",
     "id": 3
   },
-  {
+    {
     "type": "battle",
-    "description": "솔용 시도해야겠다.",
+    "description": "바위게를 먹어야겠다.",
     "id": 4
   },
   {
     "type": "battle",
-    "description": "솔바론... 괜찮을까?",
+    "description": "협곡의 전령을 마주쳤다.",
     "id": 5
+  },
+  {
+    "type": "battle",
+    "description": "솔용 시도해야겠다.",
+    "id": 6
+  },
+  {
+    "type": "battle",
+    "description": "솔바론... 괜찮을까?",
+    "id": 7
   },
   {
     "type": "battle",
     "description": "적 티모가 실명을 걸었다.",
     "id": 1001
   },
-    {
+  {
     "type": "battle",
     "description": "상대 마스터 이가 Q로 붙었다.",
     "id": 1002
   },
     {
     "type": "battle",
-    "description": "상대 야스오가 날린 바람에 맞았다.",
+    "description": "상대 야스오가 날린 돌풍에 맞았다.",
     "id": 1003
   },
   {
@@ -82,7 +92,7 @@
   },
   {
     "type": "item",
-    "description": "망자의 갑옷을 다.",
+    "description": "망자의 갑옷을 샀다.",
     "id": 1003
   },
   
