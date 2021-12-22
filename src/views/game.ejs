@@ -64,7 +64,7 @@
       }
       #itemBox {
         height: 50px;
-        margin: 10px 0px;
+        margin: 10px 30px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -89,7 +89,7 @@
         <div id="DEF"></div>
         <div id="EXP"></div>
         <h3>인벤토리</h3>
-        <div id="inventory"></div>
+        <div id="inventory" style="width:max-content; height: 200px; margin:0 0 30px; overflow: auto; overflow-x: hidden;"></div>
       </div>
       <button onclick="{localStorage.removeItem('_key'); location.href='/';}">
         로그아웃
