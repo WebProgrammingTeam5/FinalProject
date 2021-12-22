@@ -14,6 +14,8 @@ const playerSchema = new Schema({
   HP: { type: Number, default: 100 },
   str: { type: Number, default: 10 },
   def: { type: Number, default: 10 },
+  strItem: { type: Number, default: 0 },
+  defItem: { type: Number, default: 0 },
   battleCount: { type: Number, default: 1 },
   rerollCount: { type: Number, default: 0 },
   x: { type: Number, default: 0 },
