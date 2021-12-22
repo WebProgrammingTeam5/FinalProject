@@ -37,6 +37,7 @@
         justify-content: center;
         align-items: center;
         text-align: center;
+        font-size: 120%;
       }
       #map {
       }
@@ -62,14 +63,6 @@
         flex-direction: column;
         align-items: center;
       }
-      #itemBox {
-        height: 50px;
-        margin: 10px 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: khaki;
-      }
       #control {
         display: flex;
         justify-content: center;
@@ -89,7 +82,7 @@
         <div id="DEF"></div>
         <div id="EXP"></div>
         <h3>인벤토리</h3>
-        <div id="inventory" style="width:max-content; height: 200px; margin:0 0 30px; overflow: auto; overflow-x: hidden;"></div>
+        <div id="inventory" style="width:80%; height: 200px; margin:0 0 30px; overflow: auto; overflow-x: hidden; background-color: darkkhaki;"></div>
       </div>
       <button onclick="{localStorage.removeItem('_key'); location.href='/';}">
         로그아웃
@@ -98,8 +91,8 @@
 
     <div id="interface">
       <div id="game"></div>
-      <div id="monster" style="white-space: pre"></div>
-      <div id="event_result" style="white-space: pre;"></div>
+      <div id="monster" style="white-space: pre; margin-top: 20px;"></div>
+      <div id="event_result" style="white-space: pre; margin: 20px 0;"></div>
       <div id="control"></div>
     </div>
 
@@ -132,8 +125,8 @@
             $('#map').append(row);
           }
           $('#game').text(field.description);
-          $('#STR').text(`공격력: ${player.str}`);
-          $('#DEF').text(`방어력: ${player.def}`);
+          $('#STR').text(`공격력: ${player.str+player.strItem}(+${player.strItem})`);
+          $('#DEF').text(`방어력: ${player.def+player.defItem}(+${player.defItem})`);
           $('#HP').text(`체력 : ${player.HP} / ${player.maxHP}`);
           $('#EXP').text(`경험치 : ${player.exp} / ${player.maxEXP}`);
 
@@ -144,6 +137,7 @@
           req.actions.forEach((action) => {
             const dom = $('<button></button>');
             dom.text(action.text);
+            dom.css({'font-size':'80%', 'padding':'5px', 'margin':'0 5px'});
             dom.bind('click', function () {
               sendAction(action.url, action.params);
             });
@@ -152,7 +146,15 @@
           $('#inventory').html('');
           req.player.item.forEach((item) => {
             const itemBox = $('<div id="itemBox"></div>');
-            itemBox.text(item.name);
+            itemBox.css({
+              'white-space':'pre', 
+              'text-align':'center',
+              'background-color':'silver',
+              'padding':'10px',
+              'margin':'10px 20px',
+              'border-radius':'10px'
+            });
+            itemBox.text(item.name + `\n(공격력 +${item.str} / 방어력 +${item.def})`);
             $('#inventory').append(itemBox);
           });
 

@@ -63,12 +63,14 @@ app.post(
       name,
       email,
       password: encryptedPassword,
-      item: [{ name: '기본 아이템' }],
+      item: [{ name: '도란 검', str:5,def:0 },{name:'도란 방패',str:0,def:5}],
       maxHP,
       HP: maxHP,
       str: Math.floor(Math.random() * 10) + 6,
       def: Math.floor(Math.random() * 10) + 6, // 능력치 6에서 15사이로 랜덤 설정
     });
+    player.strItem += 5;
+    player.defItem += 5;
     await player.save();
     return res.send({ _id: player._id });
   }
@@ -161,8 +163,6 @@ app.post('/action', authorization, async (req, res) => {
 
     player.x = x;
     player.y = y;
-
-    // 각 칸의 이벤트를 실행시키는 부분(미완성)
     const events = field.events;
     console.log(events);
     const actions = [];
@@ -196,16 +196,17 @@ app.post('/action', authorization, async (req, res) => {
         return res.send({ player, field, event, actions });
       } else if (_event.type === 'item') {
         console.log('item');
-        const description = eventManager.getEvent(
-          'item',
-          _event.item
-        ).description;
-        event = { description: description };
         const item = itemManager.getItem(_event.item);
-        player.item.push(item);
-        // player.str += item.str;
-        // player.def += item.def;
-        // 능력치 증가는 스탯창에서 보유 아이템 리스트 모아서 한꺼번에 계산하는 것이 좋을 것 같아요!
+        if (player.item.some(it => it.name === item.name)){
+          event={description: `${item.name}을 찾았다! 하지만 이미 갖고 있군...`}
+        } else{
+          player.item.push(item);
+          // 아이템 능력치 증가
+        player.strItem += item.str;
+        player.defItem += item.def;
+        event = {description: `${item.name}을 찾았다! 나... 조금 강해졌을수도?`}
+        }
+        
       } else if(_event.type === 'restore'){
         {
          console.log('restore');
@@ -230,7 +231,7 @@ app.post('/action', authorization, async (req, res) => {
 
     if (choice === 'next') {
       event = {
-        monster: `${monster.name}\n${monster.hp}/${monster.maxHp}\n`,
+        monster: `${monster.name}\n체력: ${monster.hp} / ${monster.maxHp}\n공격력: ${monster.str}\n방어력: ${monster.def}\n`,
         description: `${player.name}은(는) 무엇을 할까?`,
       };
       // 턴제 전투 버튼 렌더링
@@ -267,7 +268,8 @@ app.post('/action', authorization, async (req, res) => {
     }
 
     let monsterDef = monster.def;
-    let playerDef = player.def;
+    let playerDef = player.def+player.defItem;
+    let playerStr = player.str+player.strItem;
     // 0은 공격, 1은 방어;
     let monsterChoice;
     let playerChoice;
@@ -291,7 +293,7 @@ app.post('/action', authorization, async (req, res) => {
     // 방어: 방어 시 def 2배
     if (choice === 'defense') {
       playerChoice = 1;
-      playerDef = player.def * 2;
+      playerDef = playerDef * 2;
     }
     // 몬스터 행동 선택
     const monsterRandom = Math.random() * monster.maxHp;
@@ -308,7 +310,7 @@ app.post('/action', authorization, async (req, res) => {
     }
     if (choice === 'attack') {
       playerChoice = 0;
-      const damage = calDamage(player.str, monsterDef);
+      const damage = calDamage(playerStr, monsterDef);
       monster.hp = Math.max(0, monster.hp - damage);
       if (monster.hp === 0) {
         const exp = parseInt((monster.maxHp/2) + Math.random()*6 - 3);
@@ -344,7 +346,7 @@ app.post('/action', authorization, async (req, res) => {
       ],
     ];
     event = {
-      monster: `${monster.name}\n체력:${monster.hp}/${monster.maxHp}\n`,
+      monster: `${monster.name}\n체력: ${monster.hp} / ${monster.maxHp}\n공격력: ${monster.str}\n방어력: ${monster.def}\n`,
       description: resultDialog[monsterChoice][playerChoice],
     };
     actions.push({
@@ -378,7 +380,10 @@ app.post('/reborn', authorization, async (req, res) => {
     return Math.floor(Math.random() * player.item.length);
   };
   if (player.item.length > 0) {
-    player.item.pop(player.item[getRandomNumber()]);
+    const index = getRandomNumber();
+    player.strItem -= player.item[index].str;
+    player.defItem -= player.item[index].def;
+    player.item.pop(player.item[index]);
   }
   await player.save();
 
