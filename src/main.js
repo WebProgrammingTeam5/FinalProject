@@ -181,8 +181,6 @@ app.post('/action', authorization, async (req, res) => {
       // events가 2개 이상이어도 가능
       const eventIndex = tempPercent[random];
       _event = events[eventIndex];
-      console.log('d' + random);
-      console.log(tempPercent);
 
       if (_event.type === 'battle') {
         console.log('battle');
@@ -208,6 +206,16 @@ app.post('/action', authorization, async (req, res) => {
         // player.str += item.str;
         // player.def += item.def;
         // 능력치 증가는 스탯창에서 보유 아이템 리스트 모아서 한꺼번에 계산하는 것이 좋을 것 같아요!
+      } else if(_event.type === 'restore'){
+        {
+         console.log('restore');
+            // 피 회복
+            const restoreHp = parseInt(Math.random()*10+10);
+            player.incrementHP(restoreHp);
+            const randomDescription = ['우물을 발견했다!', '꿀열매를 발견했다!'];
+            const randomNum = parseInt(Math.random());
+            event = { description: randomDescription[randomNum] + `\n체력회복: +${restoreHp}` };
+        }
       }
     }
     await player.save();
@@ -274,7 +282,6 @@ app.post('/action', authorization, async (req, res) => {
       const randomDamage =
         parseInt((Math.random() * normalDamage) / 4 + 1) *
         plusOrMinus[Math.round(Math.random())];
-      console.log(randomDamage);
       const totalDamage = normalDamage + randomDamage;
       return totalDamage;
     };
@@ -297,7 +304,6 @@ app.post('/action', authorization, async (req, res) => {
       // 몬스터 공격
       monsterChoice = 0;
       const damage = calDamage(monster.str, playerDef);
-      console.log('dd' + damage);
       player.incrementHP(-damage);
     }
     if (choice === 'attack') {
