@@ -87,6 +87,7 @@
         <div id="HP"></div>
         <div id="STR"></div>
         <div id="DEF"></div>
+        <div id="EXP"></div>
         <h3>인벤토리</h3>
         <div id="inventory"></div>
       </div>
@@ -98,7 +99,7 @@
     <div id="interface">
       <div id="game"></div>
       <div id="monster" style="white-space: pre"></div>
-      <div id="event_result"></div>
+      <div id="event_result" style="white-space: pre;"></div>
       <div id="control"></div>
     </div>
 
@@ -134,6 +135,7 @@
           $('#STR').text(`공격력: ${player.str}`);
           $('#DEF').text(`방어력: ${player.def}`);
           $('#HP').text(`체력 : ${player.HP} / ${player.maxHP}`);
+          $('#EXP').text(`경험치 : ${player.exp} / ${player.maxEXP}`);
 
           $('#level').text(player.level);
           $('#name').text(player.name);
