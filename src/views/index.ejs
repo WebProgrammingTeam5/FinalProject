@@ -13,16 +13,16 @@
     </style>
   </head>
 
-  <body>
-    <%= gameName %>에 온 걸 환영합니다. 당신의 이름은?
-    <div class=""></div>
-    회원가입
+  <body style="display: flex; flex-direction: column; height: 100%; justify-content: center; align-items: center;">
+    <span style="font-size: 150%; font-weight: bold;"><%= gameName %>에 온 걸 환영합니다. 당신의 이름은?</span>
+    <div style="margin-top:30px;"></div>
+    <span style="font-size: 110%; font-weight: bold;">회원가입</span>
     <form id="form1" action="/signup">
       이름: <input name="name" /> email: <input name="email" /> password:
       <input name="password" type="password" />
       <input type="submit" value="확인" />
     </form>
-    로그인
+    <span style="font-size: 110%; font-weight: bold;">로그인</span>
     <form id="form" action="/login">
       email: <input name="email" /> password:
       <input name="password" type="password" />
