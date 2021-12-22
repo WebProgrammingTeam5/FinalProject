@@ -372,6 +372,8 @@ app.post('/reborn', authorization, async (req, res) => {
   player.HP = player.maxHP;
   player.x = 0;
   player.y = 0;
+  player.battleCount = 0;
+  player.exp = 0;
   const getRandomNumber = () => {
     return Math.floor(Math.random() * player.item.length);
   };
