@@ -1,15 +1,3 @@
-/*    
-
-      
-b
-      { "type": "nothing", "nothing": 1, "percent": 10 },
-      { "type": "battle", "monster": 1, "percent": 90 },
-      { "type": "item", "item": 1, "percent": 0 },
-      { "type": "restore", "restore": 1, "percent": 0 }
-
-
-*/
-
 [
   {
     "x": 0,
