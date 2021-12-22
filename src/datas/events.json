@@ -6,62 +6,98 @@
   
   {
     "type": "battle",
-    "description": "전투1",
+    "description": "칼날부리를 공격했다.",
     "id": 1
   },
   {
     "type": "battle",
-    "description": "전투2",
+    "description": "늑대를 공격했다.",
     "id": 2
   },
   {
     "type": "battle",
-    "description": "전투3",
+    "description": "돌거북에 강타를 썼다.",
     "id": 3
   },
-  {
+    {
     "type": "battle",
-    "description": "전투4",
+    "description": "바위게를 먹어야겠다.",
     "id": 4
   },
   {
     "type": "battle",
-    "description": "전투5",
+    "description": "협곡의 전령을 마주쳤다.",
     "id": 5
+  },
+  {
+    "type": "battle",
+    "description": "솔용 시도해야겠다.",
+    "id": 6
+  },
+  {
+    "type": "battle",
+    "description": "솔바론... 괜찮을까?",
+    "id": 7
+  },
+  {
+    "type": "battle",
+    "description": "적 티모가 실명을 걸었다.",
+    "id": 1001
+  },
+  {
+    "type": "battle",
+    "description": "상대 마스터 이가 Q로 붙었다.",
+    "id": 1002
+  },
+    {
+    "type": "battle",
+    "description": "상대 야스오가 날린 돌풍에 맞았다.",
+    "id": 1003
+  },
+  {
+    "type": "battle",
+    "description": "상대 베인이 앞구르기로 딜을 넣기 시작했다.",
+    "id": 1004
+  },
+    {
+    "type": "battle",
+    "description": "적 파이크가 Q를 걸었다.",
+    "id": 1005
   },
   
   {
     "type": "item",
-    "description": "아이템1을 얻었다.",
+    "description": "단검을 구매했다.",
     "id": 1
   },
   {
     "type": "item",
-    "description": "아이템2을 얻었다.",
+    "description": "B.F. 대검을 구매했다.",
     "id": 2
   },
   {
     "type": "item",
-    "description": "아이템3을 얻었다.",
+    "description": "무한의 대검을 구매했다.",
     "id": 3
   },
   {
     "type": "item",
-    "description": "아이템4을 얻었다.",
+    "description": "천 갑옷을 샀다.",
     "id": 1001
   },
   {
     "type": "item",
-    "description": "아이템5을 얻었다.",
+    "description": "파수꾼의 갑옷을 샀다.",
     "id": 1002
   },
   {
     "type": "item",
-    "description": "아이템6을 얻었다.",
+    "description": "망자의 갑옷을 샀다.",
     "id": 1003
   },
+  
   {
     "type": "restore",
-    "description": "무언가가 있다."
+    "description": "우리 팀 서포터가 힐을 써 줬다."
   }
 ]
